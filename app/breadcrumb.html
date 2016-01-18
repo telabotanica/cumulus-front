@@ -1,0 +1,5 @@
+<ol class="breadcrumb">
+  <span class="glyphicon glyphicon-home"></span>
+  <li ng-repeat-start="crumb in crumbs" ng-if="crumbs.length > 1" ng-click="crumbsCtrl.openFolder(crumb.path)" ng-hide="$last"><a href="#">{{ crumb.name }}</a></li>
+  <li ng-repeat-end ng-class="{'active':$last}" ng-click="crumbsCtrl.openFolder(crumb.path)" ng-show="$last">{{ crumb.name }}</li>
+</ol>

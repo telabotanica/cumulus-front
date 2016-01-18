@@ -1,0 +1,36 @@
+body {
+    margin: 20px;
+}
+
+thead {
+    font-weight: bold;
+}
+
+#main-title {
+    padding: 8px;
+}
+
+#file-menu {
+    position: absolute;
+}
+
+ol.breadcrumb {
+    margin-bottom: 0;
+}
+
+.valign-bottom {
+    vertical-align: bottom;
+}
+
+.glyphicon {
+    margin-right: 5px;
+    color: cornflowerblue;
+}
+
+.file-selected {
+    background-color: lightblue;
+}
+
+.open.dropdown-menu {
+    display: block;
+}

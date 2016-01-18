@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="cumulus" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="cumulus" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="cumulus" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="cumulus" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Cumulus</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <h1 id="main-title"><span class="glyphicon glyphicon-cloud valign-bottom"></span> Cumulus</h1>
+
+  <div ng-controller="FilesListController as filesList">
+    <div ng-controller="BreadcrumbsController as crumbsCtrl">
+      <breadcrumbs crumbs="crumbsCtrl.crumbs"></breadcrumbs>
+    </div>
+    <table ng-show="{{ filesList.files.length !== 0 || filesList.folders.length !== 0  }}" class="table table-hover">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Owner</td>
+          <td>Last modification</td>
+          <td>File size</td>
+          <td>License</td>
+          <td/>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-if="filesList.currentPath != ''" ng-click="filesList.backFolder()">
+          <td><span class="glyphicon glyphicon-menu-left"></span> Back</td>
+          <td/>
+          <td/>
+          <td/>
+          <td/>
+          <td/>
+        </tr>
+        <tr ng-repeat="folder in filesList.folders" data-context-menu="folder-menu.html" ng-click="filesList.openFolder(folder.name)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+          <td>
+            <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+            <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+             {{ folder.name }}
+          </td>
+          <td/>
+          <td/>
+          <td/>
+          <td/>
+          <td/>
+        </tr>
+        <tr ng-repeat="file in filesList.files" data-context-menu="file-menu.html" ng-click="showDetails(file)">
+          <td><span class="glyphicon glyphicon-file"></span> {{ file.name }}</td>
+          <td>{{ file.owner }}</td>
+          <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td>
+          <td>{{ file.size | formatByte }}</td>
+          <td>{{ file.licence }}</td>
+          <td><a href="http://files.cumulus.dev{{filesList.currentPath + '/' + file.name}}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div ng-show="{{ filesList.files.length === 0 && filesList.folders.length === 0 }}">
+      <h3>Nothing here</h3>
+      <p>To start, add a file below!</p>
+    </div>
+  </div>
+
+
+  <div ng-controller="addFilesCtrl" ngf-drop ngf-select ng-model="files" class="drop-box"
+    ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
+    accept="image/*,application/pdf"
+    ngf-pattern="'image/*,application/pdf'">
+      <p class="text-center">Drag stuff here</p>
+  </div>
+
+
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="app.js"></script>
+  <script src="bower_components/ng-file-upload-shim/ng-file-upload-shim.js"></script> <!-- for no html5 browsers support -->
+  <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+  <script src="bower_components/ng-contextmenu/dist/ng-contextmenu.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+</html>
