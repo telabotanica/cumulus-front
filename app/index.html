@@ -38,14 +38,6 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-if="filesList.currentPath != ''" ng-click="filesList.backFolder()">
-          <td><span class="glyphicon glyphicon-menu-left"></span> Back</td>
-          <td/>
-          <td/>
-          <td/>
-          <td/>
-          <td/>
-        </tr>
         <tr ng-repeat="folder in filesList.folders" data-context-menu="folder-menu.html" ng-click="filesList.openFolder(folder.name)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
           <td>
             <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
@@ -59,10 +51,13 @@
           <td/>
         </tr>
         <tr ng-repeat="file in filesList.files" data-context-menu="file-menu.html" ng-click="showDetails(file)">
-          <td><span class="glyphicon glyphicon-file"></span> {{ file.name }}</td>
+          <td><span ng-class="filesList.fileIcon(file.mimetype)"></span> {{ file.name }}</td>
           <td>{{ file.owner }}</td>
-          <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td>
-          <td>{{ file.size | formatByte }}</td>
+          <!-- <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td> -->
+          <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
+            <span am-time-ago="file.last_modification_date" am-full-date-threshold="7" fullDateFormat="d MMM yyyy"></span>
+          </td>
+          <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
           <td>{{ file.licence }}</td>
           <td><a href="http://files.cumulus.dev{{filesList.currentPath + '/' + file.name}}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
         </tr>
@@ -77,9 +72,7 @@
 
 
   <div ng-controller="addFilesCtrl" ngf-drop ngf-select ng-model="files" class="drop-box"
-    ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
-    accept="image/*,application/pdf"
-    ngf-pattern="'image/*,application/pdf'">
+    ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true">
       <p class="text-center">Drag stuff here</p>
   </div>
 
@@ -96,5 +89,7 @@
   <script src="bower_components/ng-contextmenu/dist/ng-contextmenu.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/angular-moment/angular-moment.js"></script>
 </body>
 </html>

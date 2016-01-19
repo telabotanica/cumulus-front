@@ -2,7 +2,7 @@
   'use strict';
 
   // Declare app level module which depends on views, and components
-  angular.module('cumulus', ['ngFileUpload', 'ngContextMenu'])
+  angular.module('cumulus', ['ngFileUpload', 'ngContextMenu', 'angularMoment'])
 
   .factory('BreadcrumbsService', function() {
     var crumbs = [];
@@ -93,8 +93,6 @@
           currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
           baseUrl = 'http://files.cumulus.dev/' + currentPath;
 
-          console.log(baseUrl);
-
           for (var i = 0; i < files.length; i++) {
             var file = files[i];
             if (!file.$error) {
@@ -131,6 +129,7 @@
       vm.openFolder = openFolder;
       vm.backFolder = backFolder;
       vm.openAbsoluteFolder = openAbsoluteFolder;
+      vm.fileIcon = fileIcon;
 
       function openFolder(targetFolder, absolute) {
         vm.currentPath = absolute ? targetFolder : vm.currentPath += '/' + targetFolder;
@@ -145,6 +144,7 @@
         $scope.$broadcast('refreshBreadcrumbs');
 
         $http.get('http://files.cumulus.dev/by-path' + vm.currentPath).success(function(data) {
+          console.log(data.results);
           vm.files = data.results;
         });
 
@@ -175,6 +175,23 @@
 
       function openAbsoluteFolder(targetFolder) {
         vm.openFolder(targetFolder, true);
+      }
+
+      function fileIcon(mimetype) {
+        var mediatype;
+        [ mediatype ] = mimetype.split('/');
+        switch (mediatype) {
+          case 'image':
+            return 'glyphicon glyphicon-picture';
+          case 'audio':
+            return 'glyphicon glyphicon-headphones';
+          case 'video':
+            return ' glyphicon glyphicon-facetime-video';
+          case 'text':
+            return 'glyphicon glyphicon-list-alt';
+          default:
+            return 'glyphicon glyphicon-file';
+        }
       }
 
       $scope.$on('openFolder', function(event, path) {
