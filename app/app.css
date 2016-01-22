@@ -6,8 +6,37 @@ thead {
     font-weight: bold;
 }
 
+filesearch {
+    cursor: pointer;
+}
+
+.padding8 {
+    padding: 8px;
+}
+
 #main-title {
     padding: 8px;
+}
+
+#toolbar {
+    display: flex;
+    background-color: #f5f5f5;
+}
+
+#breadcrumb {
+    flex: 1;
+}
+
+.flex1 {
+    flex: 1;
+}
+
+.width100 {
+    width: 100%;
+}
+
+#right-tools {
+    display: flex;
 }
 
 #file-menu {

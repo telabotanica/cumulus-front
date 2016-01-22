@@ -1,8 +1,14 @@
 (function() {
   'use strict';
 
-  // Declare app level module which depends on views, and components
-  angular.module('cumulus', ['ngFileUpload', 'ngContextMenu', 'angularMoment'])
+  angular.module('cumulus', [
+    /* Shared modules */
+    'cumulus.files',
+    /* 3rd-party modules */
+    'ngFileUpload',
+    'ngContextMenu',
+    'angularMoment'
+  ])
 
   .factory('BreadcrumbsService', function() {
     var crumbs = [];
@@ -19,8 +25,8 @@
     };
   })
 
-  .controller('BreadcrumbsController', ['$scope', 'BreadcrumbsService',
-    function($scope, BreadcrumbsService) {
+  .controller('BreadcrumbsController', ['$rootScope', 'BreadcrumbsService',
+    function($rootScope, BreadcrumbsService) {
       var vm = this;
 
       vm.refresh = function() {
@@ -42,43 +48,70 @@
 
       vm.refresh();
 
-      $scope.$on('refreshBreadcrumbs', function() {
+      $rootScope.$on('refreshBreadcrumbs', function() {
         vm.refresh();
       });
     }
   ])
 
-  .directive('filemenu', function() {
-    // Runs during compile
+  .directive('filesearch', function() {
+    var FileSearchController = function($rootScope, $scope) {
+      var vm = this;
+
+      $scope.$watch('isSearchOpen', function(newValue, oldValue) {
+        if (newValue === false && oldValue === true) {
+          $rootScope.$broadcast('searchClosed');
+          $rootScope.nbSearchResults = 0;
+        }
+      });
+
+      vm.search = function(query) {
+        $rootScope.$broadcast('fileSearch', query);
+      };
+    };
+
     return {
       restrict: 'E',
-      templateUrl: 'file-menu.html'
+      controller: FileSearchController,
+      controllerAs: 'fileSearchCtrl',
+      scope: {
+        isSearchOpen: '=isSearchOpen'
+      },
+      templateUrl: 'file-search.html'
     };
   })
 
-  .directive('breadcrumbs', ['BreadcrumbsService',
-    function(BreadcrumbsService) {
-      var CrumbsController = function($rootScope) {
-        var vm = this;
+  .controller('FileContextMenuController', ['$rootScope', 'FilesListService' , function($rootScope, FilesListService) {
+    var vm = this;
 
-        vm.openFolder = function(folderPath) {
-          $rootScope.$broadcast('openFolder', folderPath);
-        }
-      };
-      // Runs during compile
-      return {
-        controller: CrumbsController,
-        controllerAs: 'crumbsCtrl',
-        restrict: 'E',
-        scope: {
-          crumbs: '=crumbs'
-        },
-        templateUrl: 'breadcrumb.html'
-      };
-    }
-  ])
+    vm.deleteFile = function(file) {
+      FilesListService.deleteFile(file, function(path) {
+        $rootScope.$broadcast('openAbsoluteFolder', path);
+      });
+    };
+  }])
 
-  .controller('addFilesCtrl', ['$scope', '$rootScope', 'Upload', '$timeout', 'BreadcrumbsService',
+  .directive('breadcrumbs', function() {
+    var CrumbsController = function($rootScope) {
+      var vm = this;
+
+      vm.openFolder = function(folderPath) {
+        $rootScope.$broadcast('openAbsoluteFolder', folderPath);
+      };
+    };
+
+    return {
+      controller: CrumbsController,
+      controllerAs: 'crumbsCtrl',
+      restrict: 'E',
+      scope: {
+        crumbs: '=crumbs'
+      },
+      templateUrl: 'breadcrumb.html'
+    };
+  })
+
+  .controller('AddFilesController', ['$scope', '$rootScope', 'Upload', '$timeout', 'BreadcrumbsService',
     function($scope, $rootScope, Upload, $timeout, BreadcrumbsService) {
       $scope.$watch('files', function() {
         $scope.upload($scope.files);
@@ -107,7 +140,7 @@
                 $scope.log = 'progress: ' + progressPercentage + '% ' +
                             evt.config.data.file.name + '\n' + $scope.log;
               }).success(function(data, status, headers, config) {
-                $rootScope.$broadcast('openFolder', '/' + currentPath);
+                $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
                 $timeout(function() {
                     $scope.log = 'file: ' + config.data.file.name + ', Response: ' + JSON.stringify(data) + '\n' + $scope.log;
                 });
@@ -119,15 +152,15 @@
     }
   ])
 
-  .controller('FilesListController', ['$http', 'BreadcrumbsService', '$scope',
-    function($http, BreadcrumbsService, $scope) {
+  .controller('FilesListController', ['$http', 'BreadcrumbsService', '$rootScope', 'FilesListService',
+    function($http, BreadcrumbsService, $rootScope, FilesListService) {
       var vm = this;
 
       vm.currentPathArray = [];
       vm.currentPath = '';
 
       vm.openFolder = openFolder;
-      vm.backFolder = backFolder;
+      // vm.backFolder = backFolder;
       vm.openAbsoluteFolder = openAbsoluteFolder;
       vm.fileIcon = fileIcon;
 
@@ -141,46 +174,46 @@
           BreadcrumbsService.setCurrentPathCrumbs(angular.copy(vm.currentPathArray));
         }
 
-        $scope.$broadcast('refreshBreadcrumbs');
+        $rootScope.$broadcast('refreshBreadcrumbs');
 
-        $http.get('http://files.cumulus.dev/by-path' + vm.currentPath).success(function(data) {
-          console.log(data.results);
-          vm.files = data.results;
-        });
+        // $http.get('http://files.cumulus.dev/by-path' + vm.currentPath).success(function(data) {
+        //   vm.files = data.results;
+        // });
 
-        $http.get('http://files.cumulus.dev/get-folders' + vm.currentPath).success(function(folders) {
-          var searchAndDestroy = function(folders) {
-            var cleanFolders = [];
-            for (var index in folders) {
-              var folder = folders[index];
-                if (folder['folder'] !== '/' && folder['name'] !== '') {
+        // $http.get('http://files.cumulus.dev/get-folders' + vm.currentPath).success(function(folders) {
+        //   var searchAndDestroy = function(folders) {
+        //     var cleanFolders = [];
+        //     for (var index in folders) {
+        //       var folder = folders[index];
+        //         if (folder['folder'] !== '/' && folder['name'] !== '') {
 
-                  cleanFolders.push(folder);
-                }
-            }
-            return cleanFolders;
-          }
-          vm.folders = searchAndDestroy(folders);
-        });
+        //           cleanFolders.push(folder);
+        //         }
+        //     }
+        //     return cleanFolders;
+        //   };
+        //   vm.folders = searchAndDestroy(folders);
+        // });
+
+        vm.filesList = FilesListService.getByPath(vm.currentPath);
       };
 
-      function backFolder() {
-        var regexpt = /.*(\/\w+)$/;
-        var result = regexpt.exec(vm.currentPath)
-        if (result) {
-          var previousFolder = vm.currentPath.replace(result[1], '');
-          vm.openAbsoluteFolder(previousFolder, true);
-        }
-      }
+      // function backFolder() {
+      //   var regexpt = /.*(\/\w+)$/;
+      //   var result = regexpt.exec(vm.currentPath);
+      //   if (result) {
+      //     var previousFolder = vm.currentPath.replace(result[1], '');
+      //     vm.openAbsoluteFolder(previousFolder);
+      //   }
+      // }
 
       function openAbsoluteFolder(targetFolder) {
         vm.openFolder(targetFolder, true);
       }
 
       function fileIcon(mimetype) {
-        var mediatype;
-        [ mediatype ] = mimetype.split('/');
-        switch (mediatype) {
+        var mediatype = mimetype.split('/');
+        switch (mediatype[0]) {
           case 'image':
             return 'glyphicon glyphicon-picture';
           case 'audio':
@@ -194,11 +227,24 @@
         }
       }
 
-      $scope.$on('openFolder', function(event, path) {
-        vm.openAbsoluteFolder(path, true);
+      $rootScope.$on('fileSearch', function(event, query) {
+        FilesListService.fileSearch(query, function(data) {
+          vm.filesList = data;
+
+          $rootScope.nbSearchResults = data.files.length;
+        });
       });
 
-      vm.openAbsoluteFolder(vm.currentPath, true);
+      $rootScope.$on('openAbsoluteFolder', function(event, path) {
+        vm.openAbsoluteFolder(path);
+      });
+
+      $rootScope.$on('searchClosed', function(event) {
+        vm.filesList = FilesListService.getList();
+        $rootScope.$broadcast('refreshBreadcrumbs');
+      });
+
+      vm.openAbsoluteFolder(vm.currentPath);
     }
   ])
 

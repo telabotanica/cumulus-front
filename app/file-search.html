@@ -1,0 +1,5 @@
+<div id="file-search">
+  <span ng-hide="isSearchOpen" ng-click="isSearchOpen = !isSearchOpen" class="glyphicon glyphicon-search"></span>
+  <input ng-show="isSearchOpen" type="text" ng-change="fileSearchCtrl.search(searchQuery)" ng-model="searchQuery" autofocus>
+  <span ng-show="isSearchOpen" ng-click="isSearchOpen = !isSearchOpen; searchQuery = ''; fileSearchCtrl" class="glyphicon glyphicon-remove-circle"></span>
+</div>
