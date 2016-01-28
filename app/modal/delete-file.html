@@ -1,0 +1,18 @@
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="Delete confirmation">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="modalCtrl.close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Delete?</h4>
+      </div>
+      <div class="modal-body">
+        <p>{{ modalCtrl.file.name }} is about to be permanently deleted.</p>
+        <p><strong>You can't undo this action.</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="modalCtrl.close('Delete')" class="btn btn-default" data-dismiss="modal">Delete forever</button>
+        <button type="button" ng-click="modalCtrl.close()" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

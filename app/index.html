@@ -38,16 +38,17 @@
     <table ng-show="filesListCtrl.filesList.files.length !== 0 || filesListCtrl.filesList.folders.length !== 0" class="table table-hover">
       <thead>
         <tr>
-          <td>Name</td>
-          <td>Owner</td>
-          <td>Last modification</td>
-          <td>File size</td>
-          <td>License</td>
-          <td/>
+          <td class="col-md-5 col-lg-5">Name</td>
+          <td class="col-md-2 col-lg-2">Owner</td>
+          <td class="col-md-2 col-lg-2">Last modification</td>
+          <td class="col-md-1 col-lg-1">File size</td>
+          <td class="col-md-1 col-lg-1">License</td>
+          <td class="col-md-1 col-lg-1"/>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="folder in filesListCtrl.filesList.folders" data-context-menu="folder-menu.html" ng-click="filesListCtrl.openFolder(folder.name)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+        <!-- Folders list -->
+        <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" data-context-menu="folder-menu.html" ng-click="filesListCtrl.openFolder(folder.name)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
           <td>
             <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
             <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
@@ -59,8 +60,11 @@
           <td/>
           <td/>
         </tr>
-        <tr ng-repeat="file in filesListCtrl.filesList.files" ng-controller="FileContextMenuController as fileMenuCtrl" data-context-menu="file-menu.html" ng-model="file" ng-click="showDetails(file)">
-          <td><span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}</td>
+        <!-- Files list -->
+        <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="file in filesListCtrl.filesList.files" ng-controller="FileContextMenuController as fileMenuCtrl" data-context-menu="file-menu.html" ng-model="file" ng-click="showDetails(file)">
+          <td>
+            <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
+          </td>
           <td>{{ file.owner }}</td>
           <!-- <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td> -->
           <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
@@ -71,10 +75,24 @@
           <td>{{ file.licence }}</td>
           <td><a href="http://files.cumulus.dev{{filesListCtrl.currentPath + '/' + file.name}}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
         </tr>
+        <!-- Search results files list -->
+        <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" ng-controller="FileContextMenuController as fileMenuCtrl" data-context-menu="file-menu.html" ng-model="file" ng-click="showDetails(file)">
+          <td>
+            <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
+            <span ng-click="filesListCtrl.openAbsoluteFolder(file.path); filesListCtrl.closeSearch()" class="discret"> ({{ file.path }})</span>
+          </td>
+          <td>{{ file.owner }}</td>
+          <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
+            <span am-time-ago="file.last_modification_date"></span>
+          </td>
+          <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
+          <td>{{ file.licence }}</td>
+          <td><a href="http://files.cumulus.dev{{filesListCtrl.currentPath + '/' + file.name}}"><span class="glyphicon glyphicon-download-alt"></span></a></td>
+        </tr>
       </tbody>
     </table>
 
-    <div ng-show="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
+    <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
       <h3>Nothing here</h3>
       <p>To start, add a file below!</p>
     </div>
@@ -85,21 +103,31 @@
       <p class="text-center">Drag stuff here</p>
   </div>
 
+  <div id="modal"></div>
+
 
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="app.js"></script>
-  <script src="files-service.js"></script>
+  <script src="modal/modal.controller.js"></script>
+  <script src="files/files.controller.js"></script>
+  <script src="files/files.service.js"></script>
+  <script src="files/add-files.controller.js"></script>
+  <script src="breadcrumbs/breadcrumbs.controller.js"></script>
+  <script src="breadcrumbs/breadcrumbs.directive.js"></script>
+  <script src="breadcrumbs/breadcrumbs.service.js"></script>
+  <script src="search/files-search.directive.js"></script>
   <script src="bower_components/ng-file-upload-shim/ng-file-upload-shim.js"></script> <!-- for no html5 browsers support -->
   <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
   <script src="bower_components/ng-contextmenu/dist/ng-contextmenu.js"></script>
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/moment/moment.js"></script>
   <script src="bower_components/angular-moment/angular-moment.js"></script>
+  <script src="bower_components/angular-modal-service/dst/angular-modal-service.js"></script>
 </body>
 </html>

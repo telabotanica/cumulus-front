@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('cumulus.files', [])
+  angular.module('cumulus.files')
 
   .factory('FilesListService', function($http) {
     var vm = this;
@@ -11,6 +11,18 @@
     };
 
     vm.rootUrl = 'http://files.cumulus.dev';
+
+    var service = {
+      getList: getList,
+      getByPath: getByPath,
+      fileSearch: fileSearch,
+      searchAdvanced: searchAdvanced,
+      filter: filter,
+      deleteFile: deleteFile,
+      renameFile: renameFile
+    };
+
+    return service;
 
     /**
      * Return current files and folders list
@@ -71,7 +83,7 @@
         );
       } else {
         updateFilesList({
-          'files': [],
+          files: [],
           'folders': []
         });
       }
@@ -161,27 +173,26 @@
     /**
      * Delete a file from the storage
      * @param  {Object} file The file aimed to be deleted
-     * @return {[type]}
      */
     function deleteFile(file, callback) {
-      if (file) {
-        $http.delete(vm.rootUrl + file.path + '/' + file.fkey)
-          .success(function(data) {
-            if (callback) {
-              callback(data.path);
-            }
-          }
-        );
-      }
+      $http.delete(vm.rootUrl + file.path + '/' + file.fkey)
+        .success(function(data) {
+          callback(data.path);
+        }
+      );
     }
 
-    return {
-      getList: getList,
-      getByPath: getByPath,
-      fileSearch: fileSearch,
-      searchAdvanced: searchAdvanced,
-      filter: filter,
-      deleteFile: deleteFile
+    /**
+     * Rename a file already stored
+     * @param  {Object} file The file aimed to be renamed
+     */
+    function renameFile(file, newFileName, callback) {
+      $http.post(vm.rootUrl + '/' + file.fkey, {
+          newname: newFileName
+        }).success(function(data) {
+          callback(data.path);
+        }
+      );
     }
   });
 })();

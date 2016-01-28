@@ -63,3 +63,14 @@ ol.breadcrumb {
 .open.dropdown-menu {
     display: block;
 }
+
+.discret {
+    color: #565656;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+/* fix for strange bootstrap modal bug */
+body.modal-open {
+    padding-right: 0px !important;
+}
