@@ -1,17 +1,17 @@
-<ul class="open dropdown-menu">
+<ul class="open dropdown-menu" ng-controller="ContextMenuController as contextMenuCtrl">
   <!-- <li ng-if="menu == 'file'">
     <a href="#"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Download</a>
   </li> -->
   <li>
     <a href="#"><span class="glyphicon glyphicon-share" aria-hidden="true"></span> Share</a>
   </li>
-  <li ng-click="fileMenuCtrl.renameFileDialog(file)">
+  <li ng-click="contextMenuCtrl.renameFileDialog(file)">
     <a href="#"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Rename</a>
   </li>
 
   <li role="separator" class="divider"></li>
 
-  <li ng-click="fileMenuCtrl.deleteFileDialog(file)">
+  <li ng-click="contextMenuCtrl.deleteFileDialog(file)">
     <a href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</a>
   </li>
 </ul>

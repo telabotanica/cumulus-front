@@ -3,7 +3,7 @@
 
   angular.module('cumulus.search', [])
 
-  .directive('filesearch', function() {
+  .directive('filesearch', ['configService', function(configService) {
     var FileSearchController = function($rootScope, $scope) {
       var vm = this;
 
@@ -16,8 +16,8 @@
       vm.closeSearch = function() {
         $rootScope.$broadcast('searchClosed');
         $rootScope.nbSearchResults = 0;
-        $scope.searchQuery = '';
-        $scope.isSearchOpen = false;
+        vm.searchQuery = '';
+        vm.isSearchOpen = false;
       }
 
       vm.search = function(query) {
@@ -25,15 +25,13 @@
       };
     };
 
+    var path = configService.getConfig();
+
     return {
       restrict: 'E',
       controller: FileSearchController,
       controllerAs: 'fileSearchCtrl',
-      scope: {
-        isSearchOpen: '=isSearchOpen',
-        searchQuery: '=searchQuery'
-      },
-      templateUrl: 'file-search.html'
+      templateUrl: path + 'search/file-search.html'
     };
-  })
+  }])
 })();

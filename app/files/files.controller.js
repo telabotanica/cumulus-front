@@ -3,65 +3,24 @@
 
   angular.module('cumulus.files', [])
 
-  .controller('FilesListController', ['$http', 'breadcrumbsService', '$rootScope', 'FilesListService',
-    function($http, breadcrumbsService, $rootScope, FilesListService) {
+  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService',
+    function($http, breadcrumbsService, $scope, $rootScope, FilesListService) {
       var vm = this;
 
       vm.currentPathArray = [];
       vm.currentPath = '';
-
-      vm.openFolder = openFolder;
-      // vm.backFolder = backFolder;
-      vm.openAbsoluteFolder = openAbsoluteFolder;
-      vm.fileIcon = fileIcon;
       vm.filesList = [];
       vm.searchResultsFilesList = [];
 
-      function openFolder(targetFolder, absolute) {
-        vm.currentPath = absolute ? targetFolder : vm.currentPath += '/' + targetFolder;
-        if (!absolute) {
-          vm.currentPathArray.push(targetFolder);
-          breadcrumbsService.addCrumb(targetFolder);
-        } else {
-          vm.currentPathArray = targetFolder.split('/');
-          breadcrumbsService.setCurrentPathCrumbs(angular.copy(vm.currentPathArray));
-        }
+      vm.showDetails = showDetails;
+      vm.fileIcon = fileIcon;
+      vm.openFolder = openFolder;
+      vm.openAbsoluteFolder = openAbsoluteFolder;
 
-        $rootScope.$broadcast('refreshBreadcrumbs');
+      $scope.sortFiles = sortFiles;
 
-        // $http.get('http://files.cumulus.dev/by-path' + vm.currentPath).success(function(data) {
-        //   vm.files = data.results;
-        // });
-
-        // $http.get('http://files.cumulus.dev/get-folders' + vm.currentPath).success(function(folders) {
-        //   var searchAndDestroy = function(folders) {
-        //     var cleanFolders = [];
-        //     for (var index in folders) {
-        //       var folder = folders[index];
-        //         if (folder['folder'] !== '/' && folder['name'] !== '') {
-
-        //           cleanFolders.push(folder);
-        //         }
-        //     }
-        //     return cleanFolders;
-        //   };
-        //   vm.folders = searchAndDestroy(folders);
-        // });
-
-        vm.filesList = FilesListService.getByPath(vm.currentPath);
-      };
-
-      // function backFolder() {
-      //   var regexpt = /.*(\/\w+)$/;
-      //   var result = regexpt.exec(vm.currentPath);
-      //   if (result) {
-      //     var previousFolder = vm.currentPath.replace(result[1], '');
-      //     vm.openAbsoluteFolder(previousFolder);
-      //   }
-      // }
-
-      function openAbsoluteFolder(targetFolder) {
-        vm.openFolder(targetFolder, true);
+      function showDetails(file) {
+        $rootScope.$broadcast('showFileDetails', file);
       }
 
       function fileIcon(mimetype) {
@@ -78,6 +37,29 @@
           default:
             return 'glyphicon glyphicon-file';
         }
+      };
+
+      function openFolder(targetFolder, absolute) {
+        vm.currentPath = absolute ? targetFolder : vm.currentPath += '/' + targetFolder;
+        if (!absolute) {
+          vm.currentPathArray.push(targetFolder);
+          breadcrumbsService.addCrumb(targetFolder);
+        } else {
+          vm.currentPathArray = targetFolder.split('/');
+          breadcrumbsService.setCurrentPathCrumbs(angular.copy(vm.currentPathArray));
+        }
+
+        $rootScope.$broadcast('refreshBreadcrumbs');
+
+        vm.filesList = FilesListService.getByPath(vm.currentPath);
+      }
+
+      function openAbsoluteFolder(targetFolder) {
+        vm.openFolder(targetFolder, true);
+      }
+
+      function sortFiles(column, type, direction) {
+        vm.filesList = FilesListService.sortFiles(column, type, direction);
       }
 
       $rootScope.$on('fileSearch', function(event, query) {
@@ -93,7 +75,6 @@
       });
 
       $rootScope.$on('searchClosed', function(event) {
-        console.log("closed");
         vm.filesList = FilesListService.getList();
         vm.searchResultsFilesList = [];
         $rootScope.$broadcast('refreshBreadcrumbs');

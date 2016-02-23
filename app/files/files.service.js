@@ -17,9 +17,11 @@
       getByPath: getByPath,
       fileSearch: fileSearch,
       searchAdvanced: searchAdvanced,
-      filter: filter,
+      sortFiles: sortFiles,
       deleteFile: deleteFile,
-      renameFile: renameFile
+      renameFile: renameFile,
+      getPathInfo: getPathInfo,
+      sortFiles: sortFiles
     };
 
     return service;
@@ -64,6 +66,27 @@
       );
 
       return vm.filesList;
+    }
+
+    function getPathInfo(path) {
+      var info = {
+        files: 0,
+        folders: 0
+      };
+
+      $http.get(vm.rootUrl + '/by-path' + path)
+        .success(function(data) {
+          info.files = data.results.length;
+        }
+      );
+
+      $http.get(vm.rootUrl + '/get-folders' + path)
+        .success(function(folders) {
+          info.folders = folders.length;
+        }
+      );
+
+      return info;
     }
 
     /**
@@ -162,12 +185,97 @@
     }
 
     /**
-     * Apply filters on current filesList, like CreationDateAsc, SizeDesc, ...
-     * @param  {Object} filters Applied filters
-     * @return {Object}
+     * Sort current filesList.files
+     * Example sorting params :
+     *     column: 'name',
+     *     type: 'text',
+     *     direction: 'asc'
+     *
+     *  types : number, text, data
+     *  direction: asc, desc
+     * @param  {string} column    Sorting column name
+     * @param  {string} Type      Sorting column type
+     * @param  {string} direction Sorting direction
      */
-    function filter(filters) {
+    function sortFiles(column, type, direction) {
+      // @from: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare#Check_browser_support_for_extended_arguments
+      function localCompareSupportsLocales() {
+        try {
+          'foo'.localeCompare('bar', 'i');
+        } catch (e) {
+          return e.name === 'RangeError';
+        }
+        return false;
+      }
 
+      // @from: https://stackoverflow.com/questions/85815/how-to-tell-if-a-javascript-function-is-defined#85973
+      function isFunction(possibleFunction) {
+        return typeof(possibleFunction) === typeof(Function);
+      }
+
+      // function debugSort(list, sortedColumn) {
+      //   console.log('sorted list:', list);
+      //   console.log('sorted column name:', sortedColumn);
+      //   angular.forEach(list, function(item, key) {
+      //     console.log(item[sortedColumn]);
+      //   });
+      // }
+
+      var filters = {
+        column: angular.isDefined(column) ? column : 'name',
+        type: angular.isDefined(type) ? type : 'text',
+        direction: angular.isDefined(direction) ? direction : 'asc',
+      }
+
+      switch (filters.type) {
+        case 'number':
+          vm.filesList.files.sort(function(a, b) {
+            return filters.direction === 'desc'
+              ? b[filters.column] - a[filters.column]
+              : a[filters.column] - b[filters.column]
+            ;
+          });
+          break;
+
+        case 'date':
+          vm.filesList.files.sort(function(a, b) {
+            return filters.direction === 'desc'
+              ? (new Date(b[filters.column])).getTime() - (new Date(a[filters.column])).getTime()
+              : (new Date(a[filters.column])).getTime() - (new Date(b[filters.column])).getTime()
+            ;
+          });
+          break;
+
+        case 'text':
+        default:
+          if (isFunction(String.prototype.localeCompare)) {
+            if (localCompareSupportsLocales()) {
+              vm.filesList.files.sort(function(a, b) {
+                if (a[filters.column]) {
+                  var order = a[filters.column].localeCompare(b[filters.column], ['fr', 'en'], { sensitivity: 'base' });
+                  return filters.direction === 'desc' ? -order : order;
+                }
+              });
+            } else {
+              vm.filesList.files.sort(function(a, b) {
+                if (a[filters.column]) {
+                  var order = a[filters.column].localeCompare(b[filters.column]);
+                  return filters.direction === 'desc' ? -order : order;
+                }
+              });
+            }
+          } else {
+            vm.filesList.files.sort(function(a, b) {
+              if (a[filters.column].toUpperCase() > b[filters.column].toUpperCase()) return filters.direction === 'desc' ? -1 : 1;
+              if (a[filters.column].toUpperCase() < b[filters.column].toUpperCase()) return filters.direction === 'desc' ? 1 : -1;
+              // return filters.direction === 'desc' ? 0 : 0;
+              return 0;
+            });
+          }
+          break;
+      }
+
+      return vm.filesList;
     }
 
     /**

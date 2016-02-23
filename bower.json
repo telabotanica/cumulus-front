@@ -1,3 +1,4 @@
+{
   "name": "angular-seed",
   "description": "A starter project for AngularJS",
   "version": "0.0.0",
@@ -6,7 +7,6 @@
   "private": true,
   "dependencies": {
     "angular": "~1.4.0",
-    "angular-route": "~1.4.0",
     "angular-loader": "~1.4.0",
     "angular-mocks": "~1.4.0",
     "html5-boilerplate": "~5.2.0",
@@ -15,6 +15,7 @@
     "bootstrap": "~3.3.0",
     "ng-contextmenu": "~0.4.0",
     "angular-moment": "~0.10.3",
-    "angular-modal-service": "~0.6.9"
+    "angular-modal-service": "~0.6.9",
+    "ngtoast": "~1.5.6"
   }
 }

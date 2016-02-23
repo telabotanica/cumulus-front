@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 body {
     margin: 20px;
 }
@@ -6,7 +10,7 @@ thead {
     font-weight: bold;
 }
 
-filesearch {
+.pointer {
     cursor: pointer;
 }
 
@@ -27,6 +31,48 @@ filesearch {
     flex: 1;
 }
 
+#flex-content {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+#details-pane {
+    float: right;
+    width: 365px;
+    border-left: 1px solid #ddd;
+    padding: 8px;
+    margin-left: 8px;
+}
+
+#details-table > tr > td {
+    padding: 8px;
+}
+
+#files-list {
+    flex-grow: 1;
+}
+
+.details-pane-data-cell {
+    display: flex;
+}
+
+.details-pane-data-name {
+    flex: 0 0 100px;
+}
+
+.details-pane-data-value {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+td.separator {
+    padding-top: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+}
+
 .flex1 {
     flex: 1;
 }
@@ -35,8 +81,46 @@ filesearch {
     width: 100%;
 }
 
+.height36 {
+    height: 36px;
+}
+
 #right-tools {
     display: flex;
+}
+
+#right-tools .glyphicon {
+    margin: 0;
+    cursor: pointer;
+}
+
+#right-tools .btn-default {
+    background: none;
+    border: 1px solid #f5f5f5;
+    padding: 0 3px;
+}
+
+#right-tools .btn-default:hover {
+    border: 1px solid #ddd;
+    padding: 0 3px;
+}
+
+#right-tools .btn-default:active {
+    border: 1px solid gray;
+    padding: 0 3px;
+}
+
+#right-tools .btn-default.active {
+    border: 1px solid gray;
+    padding: 0 3px;
+}
+
+#right-tools .btn-default:hover > .glyphicon {
+    color: #38d;
+}
+
+#right-tools .btn-default:active > .glyphicon {
+    color: #38d;
 }
 
 #file-menu {
@@ -52,7 +136,7 @@ ol.breadcrumb {
 }
 
 .glyphicon {
-    margin-right: 5px;
+    margin-right: 8px;
     color: cornflowerblue;
 }
 
@@ -69,6 +153,36 @@ ol.breadcrumb {
     font-size: 11px;
     cursor: pointer;
 }
+
+.separator-container {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-top: 20px;
+}
+
+.separator {
+    border-top: 1px solid #e1e1e1;
+}
+
+/* Notifications */
+#notifications {
+  position: fixed;
+  z-index: 9000; /* It's over */
+  top: 0; left: 0; bottom: 57%; right: 0;
+  margin: auto;
+  width: 300px;
+  height: 250px;
+}
+
+.ui-notification:hover
+{
+    opacity: .7;
+}
+
+.toast__message {
+    cursor: pointer;
+}
+
 
 /* fix for strange bootstrap modal bug */
 body.modal-open {

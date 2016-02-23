@@ -1,0 +1,6 @@
+<span class="pointer" data-toggle="tooltip" data-placement="top" title="Tri par {{ displayedName | lowercase }}"
+      ng-click="direction = direction == 'desc' ? 'asc' : 'desc' ; sortCtrl.sortFiles(column, type, direction)">
+  <span ng-if="direction == 'asc' && sortCtrl.sortedColumn == column" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+  <span ng-if="direction == 'desc' && sortCtrl.sortedColumn == column" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+  {{ displayedName }}
+</span>

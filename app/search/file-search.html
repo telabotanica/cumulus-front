@@ -1,0 +1,13 @@
+<div id="file-search">
+  <button class="btn btn-default height36" type="button"
+    ng-hide="fileSearchCtrl.isSearchOpen"
+    ng-click="fileSearchCtrl.isSearchOpen = !fileSearchCtrl.isSearchOpen">
+    <span class="padding8 glyphicon glyphicon-search"></span>
+  </button>
+  <input type="text" id="file-search-input"
+    focus-me="fileSearchCtrl.isSearchOpen"
+    ng-show="fileSearchCtrl.isSearchOpen"
+    ng-change="fileSearchCtrl.search(fileSearchCtrl.searchQuery)"
+    ng-model="fileSearchCtrl.searchQuery">
+  <span ng-show="fileSearchCtrl.isSearchOpen" ng-click="fileSearchCtrl.closeSearch()" class="glyphicon glyphicon-remove-circle"></span>
+</div>
