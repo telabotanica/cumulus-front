@@ -1,8 +1,8 @@
 {
-  "name": "angular-seed",
-  "description": "A starter project for AngularJS",
-  "version": "0.0.0",
-  "homepage": "https://github.com/angular/angular-seed",
+  "name": "cumulus-front",
+  "description": "A frontend for Cumulus",
+  "version": "0.0.1",
+  "homepage": "https://github.com/telabotanica/cumulus-front",
   "license": "MIT",
   "private": true,
   "dependencies": {

@@ -2,20 +2,17 @@ html, body {
     height: 100%;
 }
 
-body {
-    margin: 20px;
-}
-
 thead {
     font-weight: bold;
 }
 
-.pointer {
-    cursor: pointer;
-}
+/* Main page squeletton */
 
-.padding8 {
-    padding: 8px;
+#flex-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    margin: 0 20px;
 }
 
 #main-title {
@@ -25,17 +22,34 @@ thead {
 #toolbar {
     display: flex;
     background-color: #f5f5f5;
+    margin: 0;
 }
 
 #breadcrumb {
     flex: 1;
 }
 
-#flex-content {
+ol.breadcrumb {
+    margin-bottom: 0;
+}
+
+#files-explorer {
+    flex: 1;
     display: flex;
     flex-direction: row;
-    height: 100%;
 }
+
+#files-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#dropzone {
+    flex: 1;
+}
+
+/* Details pane */
 
 #details-pane {
     float: right;
@@ -47,10 +61,6 @@ thead {
 
 #details-table > tr > td {
     padding: 8px;
-}
-
-#files-list {
-    flex-grow: 1;
 }
 
 .details-pane-data-cell {
@@ -67,23 +77,13 @@ thead {
     text-overflow: ellipsis;
 }
 
-td.separator {
+/*td.separator {
     padding-top: 8px;
     margin-bottom: 8px;
     border: 1px solid #ddd;
-}
+}*/
 
-.flex1 {
-    flex: 1;
-}
-
-.width100 {
-    width: 100%;
-}
-
-.height36 {
-    height: 36px;
-}
+/* Right tools, search, details, settings */
 
 #right-tools {
     display: flex;
@@ -127,8 +127,76 @@ td.separator {
     position: absolute;
 }
 
-ol.breadcrumb {
-    margin-bottom: 0;
+/* Dropzone */
+
+#dropzone {
+    border: 3px dashed transparent;
+    z-index: 1000;
+}
+
+#dropzone-modal {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+
+#dropzone-text {
+    display: inline-block;
+    background: #38d;
+    padding: 16px;
+    bottom: 0;
+    color: white;
+    margin: 0 auto 8px;
+    border: solid 4px #38d;
+    border-radius: 4px;
+}
+
+#dropzone-folder-name {
+    text-align: center;
+    margin-left: -16px;
+    font-weight: bold;
+}
+
+#dropzone-new-folder.dragover {
+    opacity: 1;
+}
+
+/* Drop context */
+
+#dropzone.dragover,
+#dropzone-new-folder.dragover {
+    border: 3px dashed #38d;
+}
+
+.dragover tr {
+    opacity: 0.6;
+}
+
+.dragover #dropzone-new-folder {
+    opacity: 1;
+}
+
+/* General utils classes */
+
+.flex1 {
+    flex: 1;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.height36 {
+    height: 36px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.padding8 {
+    padding: 8px;
 }
 
 .valign-bottom {
@@ -138,6 +206,10 @@ ol.breadcrumb {
 .glyphicon {
     margin-right: 8px;
     color: cornflowerblue;
+}
+
+.glyphicon.white {
+    color: white;
 }
 
 .file-selected {
@@ -165,9 +237,10 @@ ol.breadcrumb {
 }
 
 /* Notifications */
+
 #notifications {
   position: fixed;
-  z-index: 9000; /* It's over */
+  z-index: 9000; /* It's over ... ! */
   top: 0; left: 0; bottom: 57%; right: 0;
   margin: auto;
   width: 300px;

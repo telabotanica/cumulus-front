@@ -3,7 +3,7 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function($http) {
+  .factory('FilesListService', function($http, Upload, breadcrumbsService, ngToast) {
     var vm = this;
     vm.filesList = {
       'files': [],
@@ -21,7 +21,8 @@
       deleteFile: deleteFile,
       renameFile: renameFile,
       getPathInfo: getPathInfo,
-      sortFiles: sortFiles
+      sortFiles: sortFiles,
+      uploadFiles: uploadFiles
     };
 
     return service;
@@ -301,6 +302,38 @@
           callback(data.path);
         }
       );
+    }
+
+    function uploadFiles(files, isNewFolder, callback) {
+      if (files && files.length) {
+        var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
+          currentPath,
+          baseUrl;
+
+        currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+        baseUrl = 'http://files.cumulus.dev/' + currentPath;
+
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          if (!file.$error) {
+            Upload.upload({
+              url: baseUrl + '/' + file.name,
+              method: 'POST',
+              data: {
+                file: file
+              }
+            }).progress(function(evt) {
+              // @todo progress thing or ... ? maybe ... ?
+            }).success(function(data, status, headers, config) {
+              // callback success
+            }).then(function() {
+              $('#dropzone').removeClass('dragover');
+              $('#dropzone-modal').addClass('hide');
+              $('#dropzone-new-folder').addClass('hide');
+            }).then(callback);
+          }
+        }
+      }
     }
   });
 })();

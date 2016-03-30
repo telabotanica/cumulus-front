@@ -10,28 +10,47 @@
       vm.deleteFileDialog = deleteFileDialog;
       vm.renameFileDialog = renameFileDialog;
 
-      var ModalController = function($scope, file, subject, close) {
+      var ModalController = function($scope, subject, attachment, close) {
         var vm = this;
 
-        vm.file = file;
+        switch (subject) {
+          case 'delete-file':
+            vm.file = attachment;
+            break;
+          case 'rename-file':
+            vm.file = attachment;
+            vm.newFileName = vm.file.name;
+            break;
+          case 'delete-folder':
+            vm.folder = attachment;
+            break;
+          case 'create-folder':
+          case 'rename-folder':
+            vm.folder = attachment;
+            vm.newFolderName = vm.folder.name;
+            break;
+          default:
+            alert('param error, soz');
+            break;
+        }
+
         vm.subject = subject;
-        vm.newFileName = file.name;
         vm.isModalOpened = true;
 
         vm.close = function(result) {
           close(result, 200);
           vm.isModalOpened = false;
-        }
+        };
       };
 
-      function openFileModal(file, subject, callback) {
+      function openModal(subject, attachment, callback) {
         ModalService.showModal({
-          templateUrl: 'modal/' + subject + '-file.html',
+          templateUrl: 'modal/' + subject + '.html',
           controller: ModalController,
           controllerAs: 'modalCtrl',
           inputs: {
-            file: file,
-            subject: subject
+            subject: subject,
+            attachment: attachment
           },
           appendElement: angular.element(document.getElementById('modal'))
         }).then(function(modal) {
@@ -43,8 +62,19 @@
         });
       }
 
+      function uploadInNewFolderDialog(files) {
+        openModal('create-folder', files, function(newFolderName) {
+          if (newFolderName && newFolderName.trim() !== '') {
+            FilesListService.uploadFiles(newFolderName, function(path) {
+              ngToast.create('Folder created');
+              $rootScope.$broadcast('openAbsoluteFolder', path);
+            });
+          }
+        });
+      }
+
       function deleteFileDialog(file) {
-        openFileModal(file, 'delete', function(deletionConfirmed) {
+        openModal('delete-file', file, function(deletionConfirmed) {
           if (deletionConfirmed) {
             FilesListService.deleteFile(file, function(path) {
               ngToast.create('File deleted');
@@ -55,13 +85,10 @@
       }
 
       function renameFileDialog(file) {
-        openFileModal(file, 'rename', function(newFileName) {
+        openModal('rename-file', file, function(newFileName) {
           if (newFileName && newFileName.trim() !== '') {
             FilesListService.renameFile(file, newFileName, function(path) {
-              ngToast.create({
-                content: 'File renamed',
-                horizontalPosition: 'center'
-              });
+              ngToast.create('File renamed');
               $rootScope.$broadcast('openAbsoluteFolder', path);
             });
           }
