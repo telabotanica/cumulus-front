@@ -3,8 +3,8 @@
 
   angular.module('cumulus.files', [])
 
-  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService',
-    function($http, breadcrumbsService, $scope, $rootScope, FilesListService) {
+  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config',
+    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config) {
       var vm = this;
 
       vm.currentPathArray = [];
@@ -16,6 +16,8 @@
       vm.fileIcon = fileIcon;
       vm.openFolder = openFolder;
       vm.openAbsoluteFolder = openAbsoluteFolder;
+
+      vm.downloadUrl = config.filesServiceUrl + vm.currentPath + '/';
 
       $scope.sortFiles = sortFiles;
 

@@ -9,6 +9,8 @@
     'cumulus.modal',
     'cumulus.details',
     'utils.autofocus',
+    'utils.click',
+    'utils.config',
     /* 3rd-party modules */
     'ngFileUpload',
     'ngContextMenu',

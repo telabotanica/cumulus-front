@@ -1,0 +1,17 @@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="Create new folder">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="newFolderModalCtrl.close()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">New folder name?</h4>
+      </div>
+      <div class="modal-body">
+        <input ng-model="newFolderModalCtrl.folderName" type="text" value="{{ newFolderModalCtrl.folderName }}" class="width100" select-on-click />
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="newFolderModalCtrl.close()" class="btn btn-default">Cancel</button>
+        <button type="button" ng-click="newFolderModalCtrl.close(newFolderModalCtrl.folderName)" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>

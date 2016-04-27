@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('utils', [])
+  angular.module('utils.mimetype', [])
 
   .directive('mimetypeIcon', ['configService', function(configService, $timeout, $parse) {
 

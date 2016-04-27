@@ -3,14 +3,13 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function($http, Upload, breadcrumbsService, ngToast) {
+  .factory('FilesListService', function(config, $http, Upload, breadcrumbsService, ngToast) {
     var vm = this;
+
     vm.filesList = {
       'files': [],
       'folders': []
     };
-
-    vm.rootUrl = 'http://files.cumulus.dev';
 
     var service = {
       getList: getList,
@@ -54,13 +53,13 @@
         return cleanFolders;
       };
 
-      $http.get(vm.rootUrl + '/by-path' + path)
+      $http.get(config.filesServiceUrl + '/by-path' + path)
         .success(function(data) {
           vm.filesList.files = data.results;
         }
       );
 
-      $http.get(vm.rootUrl + '/get-folders' + path)
+      $http.get(config.filesServiceUrl + '/get-folders' + path)
         .success(function(folders) {
           vm.filesList.folders = searchAndDestroy(folders);
         }
@@ -75,13 +74,13 @@
         folders: 0
       };
 
-      $http.get(vm.rootUrl + '/by-path' + path)
+      $http.get(config.filesServiceUrl + '/by-path' + path)
         .success(function(data) {
           info.files = data.results.length;
         }
       );
 
-      $http.get(vm.rootUrl + '/get-folders' + path)
+      $http.get(config.filesServiceUrl + '/get-folders' + path)
         .success(function(folders) {
           info.folders = folders.length;
         }
@@ -97,7 +96,7 @@
      */
     function fileSearch(query, updateFilesList) {
       if (query.length > 0) {
-        $http.get(vm.rootUrl + '/search/' + query)
+        $http.get(config.filesServiceUrl + '/search/' + query)
           .success(function(data) {
             updateFilesList({
               'files': data.results,
@@ -178,7 +177,7 @@
       };
 
       query = _filterSearchCriterias(query);
-      $http.get(vm.rootUrl + '/search/' + queryParams)
+      $http.get(config.filesServiceUrl + '/search/' + queryParams)
         .success(function(data) {
           console.log(data);
         }
@@ -284,7 +283,7 @@
      * @param  {Object} file The file aimed to be deleted
      */
     function deleteFile(file, callback) {
-      $http.delete(vm.rootUrl + file.path + '/' + file.fkey)
+      $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey)
         .success(function(data) {
           callback(data.path);
         }
@@ -296,7 +295,7 @@
      * @param  {Object} file The file aimed to be renamed
      */
     function renameFile(file, newFileName, callback) {
-      $http.post(vm.rootUrl + '/' + file.fkey, {
+      $http.post(config.filesServiceUrl + '/' + file.fkey, {
           newname: newFileName
         }).success(function(data) {
           callback(data.path);
@@ -311,7 +310,7 @@
           baseUrl;
 
         currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-        baseUrl = 'http://files.cumulus.dev/' + currentPath;
+        baseUrl = config.filesServiceUrl + '/' + currentPath;
 
         for (var i = 0; i < files.length; i++) {
           var file = files[i];

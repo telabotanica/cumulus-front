@@ -8,24 +8,22 @@
       var vm = this;
 
       $scope.$watch('files', function() {
-        console.log('squitch');
         console.log(vm.dropInNewFolder ? 'uploadNewFolder' : 'upload');
         // $scope.upload($scope.files);
 
         if (vm.dropInNewFolder) {
-          console.log('rpoutisubfvidfvhsifvgdufivbnidofvhsdfvhxoibvxhoifbvoifvhxofbv');
-          function CreateFolderModalController($scope, files, close) {
-            vm.isModalOpened = true;
-
-            vm.close = function(result) {
-              close(result, 200);
-              vm.isModalOpened = false;
-            };
-          }
-
           ModalService.showModal({
             templateUrl: 'modal/create-folder.html',
-            controller: CreateFolderModalController,
+            controller: function($scope, files, close) {
+              vm.isModalOpened = true;
+
+              vm.folderName = 'Untitled folder';
+
+              vm.close = function(result) {
+                close(result, 200);
+                vm.isModalOpened = false;
+              };
+            },
             controllerAs: 'newFolderModalCtrl',
             inputs: {
               files: $scope.files
@@ -34,7 +32,7 @@
           }).then(function(modal) {
             modal.element.modal();
             modal.close.then(function(userResponse) {
-              console.log(userResponse);
+              console.log('userResponse', userResponse);
 
               FilesListService.uploadFiles($scope.files, false, function() {
                 var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
@@ -43,10 +41,13 @@
                 currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
                 $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
                 ngToast.create('File(s) uploaded');
-                $('#dropzone').removeClass('dragover');
-                $('#dropzone-modal').addClass('hide');
-                $('#dropzone-new-folder').addClass('hide');
               });
+
+              modal.element.modal('hide');
+
+              $('#dropzone').removeClass('dragover');
+              $('#dropzone-modal').addClass('hide');
+              $('#dropzone-new-folder').addClass('hide');
             });
           });
         } else {

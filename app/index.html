@@ -116,7 +116,11 @@
                 <td/>
               </tr>
               <!-- Files list -->
-              <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="file in filesListCtrl.filesList.files" data-context-menu="file-menu.html" ng-model="file" ng-click="filesListCtrl.showDetails(file)">
+              <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0"
+                ng-repeat="file in filesListCtrl.filesList.files"
+                data-context-menu="file-menu.html"
+                ng-model="file"
+                ng-click="filesListCtrl.showDetails(file)">
                 <td>
                   <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
                 </td>
@@ -128,7 +132,7 @@
                 </td>
                 <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
                 <td>{{ file.licence }}</td>
-                <td><a href="http://files.cumulus.dev{{filesListCtrl.currentPath + '/' + file.name}}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
+                <td><a href="{{ filesListCtrl.downloadUrl + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
               </tr>
               <!-- Search results files list -->
               <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="file-menu.html" ng-model="file" ng-click="showDetails(file)">
@@ -142,7 +146,7 @@
                 </td>
                 <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
                 <td>{{ file.licence }}</td>
-                <td><a href="http://files.cumulus.dev{{filesListCtrl.currentPath + '/' + file.name}}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
+                <td><a href="{{ filesListCtrl.downloadUrl + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
               </tr>
             </tbody>
           </table>
@@ -186,6 +190,9 @@
   <script src="bower_components/angular/angular.js"></script>
   <script src="app.js"></script>
   <script src="utils/autofocus.directive.js"></script>
+  <!-- <script src="utils/mimetype-icon.directive.js"></script> -->
+  <script src="utils/select-on-click.directive.js"></script>
+  <script src="utils/main-config.js"></script>
   <script src="details-pane/details-pane.directive.js"></script>
   <script src="details-pane/data-cell.directive.js"></script>
   <script src="modal/modal.controller.js"></script>
