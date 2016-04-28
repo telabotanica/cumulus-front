@@ -5,7 +5,7 @@
 
   .directive('detailsPaneData', ['configService', function(configService) {
 
-    var path = configService.getConfig();
+    var path = configService.getConfig('path');
 
     return {
       restrict: 'E',

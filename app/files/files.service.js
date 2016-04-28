@@ -53,13 +53,13 @@
         return cleanFolders;
       };
 
-      $http.get(config.filesServiceUrl + '/by-path' + path)
+      $http.get(config.filesServiceUrl + '/api/by-path' + path)
         .success(function(data) {
           vm.filesList.files = data.results;
         }
       );
 
-      $http.get(config.filesServiceUrl + '/get-folders' + path)
+      $http.get(config.filesServiceUrl + '/api/get-folders' + path)
         .success(function(folders) {
           vm.filesList.folders = searchAndDestroy(folders);
         }
@@ -74,13 +74,13 @@
         folders: 0
       };
 
-      $http.get(config.filesServiceUrl + '/by-path' + path)
+      $http.get(config.filesServiceUrl + '/api/by-path' + path)
         .success(function(data) {
           info.files = data.results.length;
         }
       );
 
-      $http.get(config.filesServiceUrl + '/get-folders' + path)
+      $http.get(config.filesServiceUrl + '/api/get-folders' + path)
         .success(function(folders) {
           info.folders = folders.length;
         }
@@ -96,7 +96,7 @@
      */
     function fileSearch(query, updateFilesList) {
       if (query.length > 0) {
-        $http.get(config.filesServiceUrl + '/search/' + query)
+        $http.get(config.filesServiceUrl + '/api/search/' + query)
           .success(function(data) {
             updateFilesList({
               'files': data.results,
@@ -177,7 +177,7 @@
       };
 
       query = _filterSearchCriterias(query);
-      $http.get(config.filesServiceUrl + '/search/' + queryParams)
+      $http.get(config.filesServiceUrl + '/api/search/' + queryParams)
         .success(function(data) {
           console.log(data);
         }

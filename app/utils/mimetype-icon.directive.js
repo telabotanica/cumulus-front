@@ -21,7 +21,7 @@
       }
     };
 
-    var path = configService.getConfig();
+    var path = configService.getConfig('path');
 
     return {
       restrict: 'A',

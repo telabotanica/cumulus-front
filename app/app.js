@@ -1,6 +1,5 @@
 (function() {
   'use strict';
-
   angular.module('cumulus', [
     /* Shared modules */
     'cumulus.files',
@@ -31,16 +30,41 @@
   //   };
   // })
 
-  .factory('configService', function(){
+  .factory('configService', function() {
+    var vm = this;
+
+    vm.config = tarace;
+
     return {
-      'getConfig': getConfig
+      'getConfig': getConfig,
+      'setConfig': setConfig
     };
 
-    function getConfig() {
-      var config = $.data('config');
-      return '';
+    function getConfig(property) {
+      // en attendant de faire un truc bien genre ça : https://jsfiddle.net/e8tEX/46/
+      // var config = angular.element(document.getElementById('truc')).data('config');
+      return angular.isDefined(vm.config[property]) ? vm.config[property] : '' ;
+    }
+
+    function setConfig(config) {
+      vm.config = config;
     }
   })
+
+  // Inutile, se charge trop tard...
+  // .directive('config', ['configService', function(configService) {
+  //   function ConfigController($attrs) {
+  //     console.log($attrs.config);
+  //     if (angular.isDefined($attrs.config)) {
+  //       configService.setConfig($attrs.config);
+  //     }
+  //   }
+
+  //   return {
+  //     restrict: 'E',
+  //     controller: ConfigController
+  //   }
+  // }])
 
   .directive('sortHead', ['configService', function(configService) {
     function SortHeadController($rootScope, $scope) {
@@ -63,7 +87,7 @@
       });
     }
 
-    var path = configService.getConfig();
+    var path = configService.getConfig('path');
 
     return {
       restrict: 'E',
