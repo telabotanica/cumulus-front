@@ -3,8 +3,8 @@
 
   angular.module('cumulus.modal', [])
 
-  .controller('ContextMenuController', ['$rootScope', 'FilesListService', 'ModalService', 'ngToast',
-    function($rootScope, FilesListService, ModalService, ngToast) {
+  .controller('ContextMenuController', ['$rootScope', 'FilesListService', 'ModalService', 'ngToast', 'configService',
+    function($rootScope, FilesListService, ModalService, ngToast, configService) {
       var vm = this;
 
       vm.deleteFileDialog = deleteFileDialog;
@@ -45,7 +45,7 @@
 
       function openModal(subject, attachment, callback) {
         ModalService.showModal({
-          templateUrl: 'modal/' + subject + '.html',
+          templateUrl: configService.get('ressourcesPath') + 'modal/' + subject + '.html',
           controller: ModalController,
           controllerAs: 'modalCtrl',
           inputs: {
@@ -56,22 +56,22 @@
         }).then(function(modal) {
           modal.element.modal();
           modal.close.then(function(userResponse) {
-            console.log(userResponse);
             callback(userResponse);
           });
         });
       }
 
-      function uploadInNewFolderDialog(files) {
-        openModal('create-folder', files, function(newFolderName) {
-          if (newFolderName && newFolderName.trim() !== '') {
-            FilesListService.uploadFiles(newFolderName, function(path) {
-              ngToast.create('Folder created');
-              $rootScope.$broadcast('openAbsoluteFolder', path);
-            });
-          }
-        });
-      }
+      // @todo: vérifier si c'est pertinent, ça rassemblerait les modals
+      // function uploadInNewFolderDialog(files) {
+      //   openModal('create-folder', files, function(newFolderName) {
+      //     if (newFolderName && newFolderName.trim() !== '') {
+      //       FilesListService.uploadFiles(newFolderName, function(path) {
+      //         ngToast.create('Folder created');
+      //         $rootScope.$broadcast('openAbsoluteFolder', path);
+      //       });
+      //     }
+      //   });
+      // }
 
       function deleteFileDialog(file) {
         openModal('delete-file', file, function(deletionConfirmed) {

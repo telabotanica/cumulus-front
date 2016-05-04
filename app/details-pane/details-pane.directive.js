@@ -12,7 +12,7 @@
       });
     };
 
-    var path = configService.getConfig('path');
+    var path = configService.get('ressourcesPath');
 
     return {
       restrict: 'E',

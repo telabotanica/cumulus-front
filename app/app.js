@@ -30,24 +30,85 @@
   //   };
   // })
 
+  .directive('filePath', ['configService', function(configService) {
+    function FilePathController($scope) {
+      var displayedPath =$scope.path.replace(configService.getAbstractionPath(), '');
+      if ('' === displayedPath) {
+        displayedPath = '/';
+      }
+
+      this.path = displayedPath;
+    }
+
+    return {
+      restrict: 'E',
+      controller: FilePathController,
+      controllerAs: 'filePathCtrl',
+      template: '{{ filePathCtrl.path }}',
+      scope: {
+        path: '@'
+      }
+    }
+  }])
+
   .factory('configService', function() {
     var vm = this;
 
-    vm.config = tarace;
+    vm.config = [];
+    if ('undefined' !== typeof tarace) {
+      vm.config = tarace;
+    }
 
     return {
-      'getConfig': getConfig,
-      'setConfig': setConfig
+      get: get,
+      getConfig: getConfig,
+      setConfig: setConfig,
+      getAbstractionPathLength: getAbstractionPathLength,
+      getAbstractionPath: getAbstractionPath
     };
 
-    function getConfig(property) {
+    function get(property) { // should be named 'get'
       // en attendant de faire un truc bien genre ça : https://jsfiddle.net/e8tEX/46/
       // var config = angular.element(document.getElementById('truc')).data('config');
       return angular.isDefined(vm.config[property]) ? vm.config[property] : '' ;
     }
 
+    function getConfig() {
+      return vm.config ;
+    }
+
     function setConfig(config) {
       vm.config = config;
+    }
+
+    // Pas sûr que ça doive rester dans ce service ->
+    // Ptetr un service qui encapsule et sert exclusivement les params liés
+    // aux abstractions (y'en a pas 100000 mais bon)
+
+    /**
+     * Get the files tree abstraction path length.
+     *
+     * @return     {number}  Abstraction path length.
+     */
+    function getAbstractionPathLength() {
+      if (angular.isDefined(vm.config['projectFilesRootPath'])) {
+        return vm.config['projectFilesRootPath'].split('/').filter(function(n) { return n !== '' }).length;
+      }
+
+      return 0;
+    }
+
+    /**
+     * Get the files tree abstraction path.
+     *
+     * @return     {string}  Abstraction path.
+     */
+    function getAbstractionPath() {
+      if (angular.isDefined(vm.config['projectFilesRootPath'])) {
+        return vm.config['projectFilesRootPath'];
+      }
+
+      return '';
     }
   })
 
@@ -87,7 +148,7 @@
       });
     }
 
-    var path = configService.getConfig('path');
+    var path = configService.get('ressourcesPath');
 
     return {
       restrict: 'E',
@@ -104,12 +165,12 @@
     };
   }])
 
-  .directive('sortChevron', function() {
-    return {
-      restrict: 'E',
-      require: 'sortHead'
-    };
-  })
+  // .directive('sortChevron', function() {
+  //   return {
+  //     restrict: 'E',
+  //     require: 'sortHead'
+  //   };
+  // })
 
   .config(['ngToastProvider', function(ngToast) {
     ngToast.configure({

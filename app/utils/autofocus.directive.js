@@ -24,11 +24,9 @@
       link: function(scope, element, attrs) {
         var model = $parse(attrs.focusMe);
         scope.$watch(model, function(value) {
-          console.log('value: ', value === true);
           if (value === true) {
             $timeout(function() {
-              console.log(element[0]);
-              $(element[0]).focus();
+              $(element[0]).focus(); // @todo: angular way
             });
           }
         });

@@ -103,7 +103,7 @@
                 <td/>
               </tr>
               <!-- Folders list -->
-              <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" data-context-menu="folder-menu.html" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+              <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
                 <td>
                   <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                   <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
@@ -118,7 +118,7 @@
               <!-- Files list -->
               <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0"
                 ng-repeat="file in filesListCtrl.filesList.files"
-                data-context-menu="file-menu.html"
+                data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html"
                 ng-model="file"
                 ng-click="filesListCtrl.showDetails(file)">
                 <td>
@@ -135,10 +135,10 @@
                 <td><a href="{{ filesListCtrl.downloadUrl + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
               </tr>
               <!-- Search results files list -->
-              <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="file-menu.html" ng-model="file" ng-click="showDetails(file)">
+              <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html" ng-model="file" ng-click="showDetails(file)">
                 <td>
                   <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
-                  <span ng-click="filesListCtrl.openAbsoluteFolder(file.path); filesListCtrl.closeSearch()" class="discret"> ({{ file.path }})</span>
+                  <span ng-click="filesListCtrl.openAbsoluteFolder(file.path); filesListCtrl.closeSearch()" class="discret"> (<file-path path="{{ file.path }}"></file-path>)</span>
                 </td>
                 <td>{{ file.owner }}</td>
                 <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
@@ -155,7 +155,6 @@
 
           <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
             <h3>Nothing here</h3>
-            <p>To start, add a file below!</p>
           </div>
 
         </div>

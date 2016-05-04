@@ -15,11 +15,11 @@
         vm.crumbs = [];
         vm.crumbs.push({
           'name': 'Root',
-          'path': ''
+          'path': configService.getAbstractionPath()
         });
         var path = breadcrumbsService.getCurrentPathCrumbs();
         if (path.length > 0) {
-          for (var i=1; i<path.length; i++) {
+          for (var i = (1 + configService.getAbstractionPathLength()); i<path.length; i++) {
             vm.crumbs.push({
               name: path[i],
               path: path.slice(0, i+1).join('/')
@@ -35,7 +35,7 @@
       });
     };
 
-    var path = configService.getConfig('path');
+    var path = configService.get('ressourcesPath');
 
     return {
       controller: CrumbsController,

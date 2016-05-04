@@ -3,7 +3,7 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function(config, $http, Upload, breadcrumbsService, ngToast) {
+  .factory('FilesListService', function(config, $http, Upload, breadcrumbsService, ngToast, configService) {
     var vm = this;
 
     vm.filesList = {
@@ -21,7 +21,8 @@
       renameFile: renameFile,
       getPathInfo: getPathInfo,
       sortFiles: sortFiles,
-      uploadFiles: uploadFiles
+      uploadFiles: uploadFiles,
+      uploadFilesInFolder: uploadFilesInFolder
     };
 
     return service;
@@ -39,8 +40,8 @@
      * @param  {string} path Project relative path
      * @return {Object}
      */
-    function getByPath(path) {
-      /* cleaning results, test env purpose */
+    function getByPath(path, callback) {
+      /* cleaning results, test/root env purpose */
       var searchAndDestroy = function(folders) {
         var cleanFolders = [];
         for (var index in folders) {
@@ -53,17 +54,22 @@
         return cleanFolders;
       };
 
-      $http.get(config.filesServiceUrl + '/api/by-path' + path)
+      $http.get(config.filesServiceUrl + path)
         .success(function(data) {
-          vm.filesList.files = data.results;
-        }
-      );
+          vm.filesList.files = data.files.results;
+          vm.filesList.folders = data.folders.results;
+        })
+        .error(function() {
+          vm.filesList.files = [];
+          vm.filesList.folders = [];
+        })
+      ;
 
       $http.get(config.filesServiceUrl + '/api/get-folders' + path)
         .success(function(folders) {
           vm.filesList.folders = searchAndDestroy(folders);
-        }
-      );
+        })
+      ;
 
       return vm.filesList;
     }
@@ -74,7 +80,7 @@
         folders: 0
       };
 
-      $http.get(config.filesServiceUrl + '/api/by-path' + path)
+      $http.get(config.filesServiceUrl + path)
         .success(function(data) {
           info.files = data.results.length;
         }
@@ -96,7 +102,8 @@
      */
     function fileSearch(query, updateFilesList) {
       if (query.length > 0) {
-        $http.get(config.filesServiceUrl + '/api/search/' + query)
+        var path = configService.getAbstractionPath();
+        $http.get(config.filesServiceUrl + '/api/search/?path_recursive=true&path=' + path + '&name=' + query)
           .success(function(data) {
             updateFilesList({
               'files': data.results,
@@ -303,14 +310,14 @@
       );
     }
 
-    function uploadFiles(files, isNewFolder, callback) {
+    function uploadFiles(files, onSuccess, onError) {
       if (files && files.length) {
         var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
           currentPath,
           baseUrl;
 
         currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-        baseUrl = config.filesServiceUrl + '/' + currentPath;
+        baseUrl = config.filesServiceUrl + (currentPath !== '' ? '/' + currentPath : currentPath);
 
         for (var i = 0; i < files.length; i++) {
           var file = files[i];
@@ -325,11 +332,44 @@
               // @todo progress thing or ... ? maybe ... ?
             }).success(function(data, status, headers, config) {
               // callback success
-            }).then(function() {
-              $('#dropzone').removeClass('dragover');
-              $('#dropzone-modal').addClass('hide');
-              $('#dropzone-new-folder').addClass('hide');
-            }).then(callback);
+            }).then(onSuccess, onError);
+
+            $('#dropzone').removeClass('dragover');
+            $('#dropzone-modal').addClass('hide');
+            $('#dropzone-new-folder').addClass('hide');
+          }
+        }
+      }
+    }
+
+    // @todo: factoriser avec au dessus
+    function uploadFilesInFolder(folderName, files, onSuccess, onError) {
+      if (files && files.length) {
+        var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
+          currentPath,
+          baseUrl;
+
+        currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+        baseUrl = config.filesServiceUrl + (currentPath !== '' ? '/' + currentPath : currentPath);
+
+        for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          if (!file.$error) {
+            Upload.upload({
+              url: baseUrl + '/' + folderName + '/' + file.name,
+              method: 'POST',
+              data: {
+                file: file
+              }
+            }).progress(function(evt) {
+              // @todo progress thing or ... ? maybe ... ?
+            }).success(function(data, status, headers, config) {
+              // callback success
+            }).then(onSuccess, onError);
+
+            $('#dropzone').removeClass('dragover');
+            $('#dropzone-modal').addClass('hide');
+            $('#dropzone-new-folder').addClass('hide');
           }
         }
       }

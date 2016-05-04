@@ -3,12 +3,17 @@
 
   angular.module('cumulus.files', [])
 
-  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config',
-    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config) {
+  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'configService',
+    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, configService) {
       var vm = this;
 
       vm.currentPathArray = [];
-      vm.currentPath = '';
+      vm.currentPath = configService.get('projectFilesRootPath');
+      vm.currentPathAbstraction = vm.currentPath.length;
+      angular.forEach(vm.currentPath.split('/'), function(crumb) {
+        vm.currentPathArray.push(crumb);
+      });
+
       vm.filesList = [];
       vm.searchResultsFilesList = [];
 
@@ -18,6 +23,7 @@
       vm.openAbsoluteFolder = openAbsoluteFolder;
 
       vm.downloadUrl = config.filesServiceUrl + vm.currentPath + '/';
+      vm.contextMenuPrefix = configService.get('ressourcesPath');
 
       $scope.sortFiles = sortFiles;
 
@@ -43,6 +49,7 @@
 
       function openFolder(targetFolder, absolute) {
         vm.currentPath = absolute ? targetFolder : vm.currentPath += '/' + targetFolder;
+        // @todo: checker qu'on ouvre rien sous la racine parametrée
         if (!absolute) {
           vm.currentPathArray.push(targetFolder);
           breadcrumbsService.addCrumb(targetFolder);
@@ -54,6 +61,11 @@
         $rootScope.$broadcast('refreshBreadcrumbs');
 
         vm.filesList = FilesListService.getByPath(vm.currentPath);
+          console.log(vm.filesList);
+
+        if (vm.filesList.folders.length === 0 || vm.filesList.files.length === 0) {
+          $rootScope.$broadcast('openFolder', '/');
+        }
       }
 
       function openAbsoluteFolder(targetFolder) {

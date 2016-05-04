@@ -3,8 +3,8 @@
 
   angular.module('cumulus.files')
 
-  .controller('AddFilesController', ['$scope', '$rootScope', 'Upload', '$timeout', 'breadcrumbsService', 'ngToast', 'FilesListService', 'ModalService',
-    function($scope, $rootScope, Upload, $timeout, breadcrumbsService, ngToast, FilesListService, ModalService) {
+  .controller('AddFilesController', ['$scope', '$rootScope', 'Upload', '$timeout', 'breadcrumbsService', 'ngToast', 'FilesListService', 'ModalService', 'configService',
+    function($scope, $rootScope, Upload, $timeout, breadcrumbsService, ngToast, FilesListService, ModalService, configService) {
       var vm = this;
 
       $scope.$watch('files', function() {
@@ -12,11 +12,13 @@
         // $scope.upload($scope.files);
 
         if (vm.dropInNewFolder) {
+          var templateUrl = configService.get('ressourcesPath') + 'modal/create-folder.html';
           ModalService.showModal({
-            templateUrl: 'modal/create-folder.html',
+            templateUrl: configService.get('ressourcesPath') + 'modal/create-folder.html',
             controller: function($scope, files, close) {
-              vm.isModalOpened = true;
+              var vm = this;
 
+              vm.isModalOpened = true;
               vm.folderName = 'Untitled folder';
 
               vm.close = function(result) {
@@ -32,15 +34,16 @@
           }).then(function(modal) {
             modal.element.modal();
             modal.close.then(function(userResponse) {
-              console.log('userResponse', userResponse);
+              // @todo: checker le nom du dossier
+              // if (isValidFolderName(userResponse)) {} ...
 
-              FilesListService.uploadFiles($scope.files, false, function() {
+              FilesListService.uploadFilesInFolder(userResponse, $scope.files, function() {
                 var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
                   currentPath;
 
                 currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
                 $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
-                ngToast.create('File(s) uploaded');
+                ngToast.create('File(s) uploaded in ' + userResponse);
               });
 
               modal.element.modal('hide');
@@ -51,7 +54,7 @@
             });
           });
         } else {
-          FilesListService.uploadFiles($scope.files, false, function() {
+          FilesListService.uploadFiles($scope.files, function() {
             var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
               currentPath;
 
