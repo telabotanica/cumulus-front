@@ -8,8 +8,8 @@
       var vm = this;
 
       vm.currentPathArray = [];
-      vm.currentPath = configService.get('projectFilesRootPath');
-      vm.currentPathAbstraction = vm.currentPath.length;
+      vm.currentPath = configService.getAbstractionPath();
+      vm.currentPathAbstraction = configService.getAbstractionPathLength();
       angular.forEach(vm.currentPath.split('/'), function(crumb) {
         vm.currentPathArray.push(crumb);
       });
@@ -22,8 +22,10 @@
       vm.openFolder = openFolder;
       vm.openAbsoluteFolder = openAbsoluteFolder;
 
-      vm.downloadUrl = config.filesServiceUrl + vm.currentPath + '/';
-      vm.contextMenuPrefix = configService.get('ressourcesPath');
+      vm.downloadUrl = function() {
+        return config.filesServiceUrl + vm.currentPath + '/';
+      }
+      vm.contextMenuPrefix = configService.getAbstractionPath();
 
       $scope.sortFiles = sortFiles;
 
