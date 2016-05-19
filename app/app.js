@@ -30,9 +30,214 @@
   //   };
   // })
 
+  .directive('fileLicense', ['configService', function(configService) {
+    var FileLicenseController = function($scope) {
+      this.license = $scope.license;
+    }
+
+    var path = configService.get('ressourcesPath');
+
+    return {
+      restrict: 'E',
+      controller: FileLicenseController,
+      controllerAs: 'licenseCtrl',
+      templateUrl: path + 'files/file-license.html',
+      scope: {
+        license: '@'
+      }
+    }
+  }])
+
+  // .factory('ServiceName', ServiceName);
+  // ServiceName.$inject = ['blablabla'];
+  // function ServiceName(blablabla) {}
+
+  .factory('authInjector', ['$injector', function($injector) {
+    var authInjector = {
+      request: function(config) {
+        var authService = $injector.get('authService'),
+          filesServiceUrl = $injector.get('config').filesServiceUrl;
+
+        if (config.url.substring(0, filesServiceUrl.length) == filesServiceUrl) {
+          if (authService.isAuthenticated()) {
+            config.headers['Authorization'] = authService.token();
+            console.log('authenticated');
+          } else {
+            authService.refreshToken().then(function(response) {
+              authService.setCredentials(response.data);
+
+              config.headers['Authorization'] = authService.token();
+              console.log('refreshing');
+            }); // silent failure, @todo: handle refresh max try
+          }
+        }
+
+        return config;
+      }
+    }
+
+    return authInjector;
+  }])
+
+  .factory('sessionRecoverer', ['$q', '$injector', function($q, $injector) {
+    var sessionRecoverer = {
+      responseError: function(response) {
+        if (response.status == 400) {
+          var deferred = $q.defer();
+          var $http = $injector.get('$http');
+          var authService = $injector.get('authService');
+
+          // Trying to recover session
+          authService.refreshToken().then(function(response) {
+            authService.setCredentials(response.data);
+          }, function(data) {
+            console.log('in sessionRecoverer error', data);
+          }).then(deferred.resolve, deferred.reject);
+
+          // If session is retored, we play the previous request again
+          return deferred.promise.then(function() {
+            return $http(response.config);
+          })
+        }
+
+        return $q.reject(response);
+      }
+    }
+
+    return sessionRecoverer;
+  }])
+
+  .config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push('authInjector', 'sessionRecoverer');
+  }])
+
+  .factory('authService', ['$rootScope', '$http', 'configService', function($rootScope, $http, configService) {
+    var vm = this;
+    vm.login = '';
+    vm.role = 'anonymous';
+    vm.isAuthenticated = false;
+    vm.token = undefined;
+    vm.tokenDuration = 0;
+    vm.tokenExpirationTime;
+
+    return {
+      login: login,
+      logout: logout,
+      isAuthorized: isAuthorized,
+      refreshToken: refreshToken,
+      setCredentials: setCredentials,
+      clearCredentials: clearCredentials,
+      refreshCredentials: refreshCredentials,
+      isAuthenticated: isAuthenticated,
+      token: token
+    }
+
+    /**
+     * Determine if authenticated.
+     * If token is expired, try to renew it
+     *
+     * @return     {boolean}  True if authenticated, False otherwise.
+     */
+    function isAuthenticated() {
+      var now = new Date();
+      if (vm.tokenExpirationTime && vm.tokenExpirationTime.getTime() - now.getTime() <= 0) {
+        refreshCredentials();
+      }
+
+      return vm.isAuthenticated;
+    }
+
+    function token() {
+      return vm.token;
+    }
+
+    /**
+     * Try to log in a user
+     *
+     * @param      {string}  login      The user's login
+     * @param      {string}  password   The user's password
+     * @return     {promise}  The request promise
+     */
+    function login(login, password) {
+      return $http.get(configService.get('authUrl') + '/login' + '?login=' + login + '&password=' + encodeURIComponent(password));
+    }
+
+    /**
+     * Try to log out a user
+     *
+     * @return     {promise}  The request promise
+     */
+    function logout() {
+      return $http.get(configService.get('authUrl') + '/logout').then(function(response) {
+        return response.data;
+      });
+    }
+
+    /**
+     * Determine if current user is authorized for a given role
+     *
+     * @param      {(Array|string)}  authorizedRoles  The authorized roles
+     * @return     {boolean}         True if authorized, False otherwise.
+     */
+    function isAuthorized(authorizedRoles) {
+      if (!angular.isArray(authorizedRoles)) {
+        authorizedRoles = [authorizedRoles];
+      }
+
+      return (vm.isAuthenticated && authorizedRoles.indexOf(vm.role) !== -1);
+    }
+
+    /**
+     * Try to retrieve a logged user's token
+     *
+     * @return     {promise}  The request promise
+     */
+    function refreshToken() {
+      return $http.get(configService.get('tokenUrl'), { withCredentials: true });
+    }
+
+    function setCredentials(auth) {
+      vm.login = auth.token.libele;
+      vm.role = 'user';
+      vm.isAuthenticated = true;
+      vm.token = auth.token;
+      vm.tokenDuration = auth.duration;
+
+      // We set an expiration date for the token based on its duration (minus few seconds for network)
+      var now = new Date();
+      vm.tokenExpirationTime = new Date(now.getTime() + (vm.tokenDuration - 10) * 1000);
+    }
+
+    function clearCredentials() {
+      vm.login = '';
+      vm.role = 'anonymous';
+      vm.isAuthenticated = false;
+      vm.token = undefined;
+      vm.tokenDuration = 0;
+      vm.tokenExpirationTime = undefined;
+    }
+
+    function refreshCredentials() {
+      refreshToken().then(function(response) {
+        setCredentials(response.data);
+      });
+    }
+
+    function parseToken(token) {
+      var parts = token.split('.');
+
+      return JSON.parse(atob(parts[1]));
+    }
+
+    // function setCredentials(username, token) {
+    //   $http.defaults.headers.common['Authorization'] = 'Basic ' + token.info;
+    //   $cookieStore.put('globals', $rootScope.globals);
+    // }
+  }])
+
   .directive('filePath', ['configService', function(configService) {
     function FilePathController($scope) {
-      var displayedPath =$scope.path.replace(configService.getAbstractionPath(), '');
+      var displayedPath = $scope.path.replace(configService.getAbstractionPath(), '');
       if ('' === displayedPath) {
         displayedPath = '/';
       }
@@ -57,6 +262,7 @@
     vm.config = [];
     if ('undefined' !== typeof tarace) {
       vm.config = tarace;
+      console.log(tarace);
     }
 
     return {
@@ -64,7 +270,8 @@
       getConfig: getConfig,
       setConfig: setConfig,
       getAbstractionPathLength: getAbstractionPathLength,
-      getAbstractionPath: getAbstractionPath
+      getAbstractionPath: getAbstractionPath,
+      getRessourcesPath: getRessourcesPath
     };
 
     function get(property) { // should be named 'get'
@@ -106,6 +313,14 @@
     function getAbstractionPath() {
       if (angular.isDefined(vm.config['projectFilesRootPath'])) {
         return vm.config['projectFilesRootPath'];
+      }
+
+      return '';
+    }
+
+    function getRessourcesPath() {
+      if (angular.isDefined(vm.config['ressourcesPath'])) {
+        return vm.config['ressourcesPath'];
       }
 
       return '';

@@ -3,8 +3,8 @@
 
   angular.module('cumulus.files', [])
 
-  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'configService',
-    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, configService) {
+  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'configService', 'authService',
+    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, configService, authService) {
       var vm = this;
 
       vm.currentPathArray = [];
@@ -25,9 +25,18 @@
       vm.downloadUrl = function() {
         return config.filesServiceUrl + vm.currentPath + '/';
       }
-      vm.contextMenuPrefix = configService.getAbstractionPath();
+      vm.contextMenuPrefix = configService.getRessourcesPath();
 
       $scope.sortFiles = sortFiles;
+
+      // // trying to recognize user
+      // if (!authService.isAuthenticated()) {
+      //   authService.retrieveToken().then(function(response) {
+      //     authService.setCredentials(response.data);
+      //   }, function(data) {
+      //     console.log('error', data);
+      //   });
+      // }
 
       function showDetails(file) {
         $rootScope.$broadcast('showFileDetails', file);
@@ -63,8 +72,8 @@
         $rootScope.$broadcast('refreshBreadcrumbs');
 
         vm.filesList = FilesListService.getByPath(vm.currentPath);
-          console.log(vm.filesList);
 
+        // If target is empty we go back to root
         if (vm.filesList.folders.length === 0 || vm.filesList.files.length === 0) {
           $rootScope.$broadcast('openFolder', '/');
         }

@@ -106,7 +106,7 @@
                 <!-- <span am-time-ago="file.last_modification_date" am-full-date-threshold="7" fullDateFormat="d MMM yyyy"></span> -->
               </td>
               <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
-              <td>{{ file.licence }}</td>
+              <td><file-license license="{{ file.license }}"></file-license></td>
               <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
             </tr>
             <!-- Search results files list -->
@@ -120,7 +120,7 @@
                 <span am-time-ago="file.last_modification_date"></span>
               </td>
               <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
-              <td>{{ file.licence }}</td>
+              <td><file-license license="{{ file.license }}"></file-license></td>
               <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
             </tr>
           </tbody>

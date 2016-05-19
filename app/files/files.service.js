@@ -3,7 +3,7 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function(config, $http, Upload, breadcrumbsService, ngToast, configService) {
+  .factory('FilesListService', function(config, $http, Upload, breadcrumbsService, ngToast, configService, authService) {
     var vm = this;
 
     vm.filesList = {
@@ -36,6 +36,62 @@
     }
 
     /**
+     * Get user info by user ids
+     *
+     * @param      {array}   userIds  The user ids
+     * @return     {object}  User info indexed by user id
+     */
+    function _getUserInfo(userIds) {
+      userIds = userIds.filter(function(n) { return n != null });
+
+      var userInfo = {};
+      return $http.get(config.userInfoByIdUrl + userIds.join(',')).then(function(response) {
+        // service response format is not consistent
+        // has to index info if only one id is asked
+        if (userIds.length == 1) {
+          userInfo[response.data.id] = response.data;
+        } else {
+          userInfo = response.data;
+        }
+
+        return userInfo;
+      });
+    }
+
+    /**
+     * Replace files owner user id by user label
+     *
+     * @param      {Object}  files   The files
+     * @return     {promise}
+     */
+    function _addFilesOwnerInfo(files) {
+      var owners = [],
+        ownersInfo = {};
+
+      // collect owners id
+      angular.forEach(files, function(file) {
+        if (owners.indexOf(file.owner) == -1) {
+          owners.push(file.owner);
+        }
+      });
+
+      return _getUserInfo(owners).then(function(info) {
+        files.map(function(file) {
+          if (info.hasOwnProperty(file.owner)) {
+            var ownerInfo = info[file.owner];
+
+            if ('' != ownerInfo.intitule) {
+              file.owner = ownerInfo.intitule;
+            }
+          }
+
+        });
+
+        return files;
+      });
+    }
+
+    /**
      * Get files and folders for given path
      * @param  {string} path Project relative path
      * @return {Object}
@@ -56,7 +112,9 @@
 
       $http.get(config.filesServiceUrl + path)
         .success(function(data) {
-          vm.filesList.files = data.files.results;
+          _addFilesOwnerInfo(data.files.results).then(function(files) {
+            vm.filesList.files = files;
+          });
           vm.filesList.folders = data.folders.results;
         })
         .error(function() {
@@ -65,11 +123,11 @@
         })
       ;
 
-      $http.get(config.filesServiceUrl + '/api/get-folders' + path)
-        .success(function(folders) {
-          vm.filesList.folders = searchAndDestroy(folders);
-        })
-      ;
+      // $http.get(config.filesServiceUrl + '/api/get-folders' + path)
+      //   .success(function(folders) {
+      //     vm.filesList.folders = searchAndDestroy(folders);
+      //   })
+      // ;
 
       return vm.filesList;
     }
@@ -311,38 +369,9 @@
     }
 
     function uploadFiles(files, onSuccess, onError) {
-      if (files && files.length) {
-        var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
-          currentPath,
-          baseUrl;
-
-        currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-        baseUrl = config.filesServiceUrl + (currentPath !== '' ? '/' + currentPath : currentPath);
-
-        for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          if (!file.$error) {
-            Upload.upload({
-              url: baseUrl + '/' + file.name,
-              method: 'POST',
-              data: {
-                file: file
-              }
-            }).progress(function(evt) {
-              // @todo progress thing or ... ? maybe ... ?
-            }).success(function(data, status, headers, config) {
-              // callback success
-            }).then(onSuccess, onError);
-
-            $('#dropzone').removeClass('dragover');
-            $('#dropzone-modal').addClass('hide');
-            $('#dropzone-new-folder').addClass('hide');
-          }
-        }
-      }
+      uploadFilesInFolder('', files, onSuccess, onError);
     }
 
-    // @todo: factoriser avec au dessus
     function uploadFilesInFolder(folderName, files, onSuccess, onError) {
       if (files && files.length) {
         var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
@@ -352,17 +381,34 @@
         currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
         baseUrl = config.filesServiceUrl + (currentPath !== '' ? '/' + currentPath : currentPath);
 
+        if (folderName && folderName.length) {
+          baseUrl = baseUrl + '/' + folderName;
+        }
+
         for (var i = 0; i < files.length; i++) {
           var file = files[i];
           if (!file.$error) {
             Upload.upload({
-              url: baseUrl + '/' + folderName + '/' + file.name,
+              url: baseUrl + '/' + file.name,
               method: 'POST',
               data: {
-                file: file
+                file: file,
+                license: 'CC-BY-SA',
+                permissions: 'wr',
+                groups: configService.get('group')
               }
             }).progress(function(evt) {
-              // @todo progress thing or ... ? maybe ... ?
+              var percentCompleted;
+              file.uploadStatus = 'Uploading...';
+
+              if (evt.type == 'progress' && evt.lengthComputable) {
+                percentCompleted = Math.round(evt.loaded / evt.total * 100);
+                if (percentCompleted == 100) {
+                    file.uploadStatus = 'Saving...';
+                } else {
+                    file.uploadStatus = percentCompleted + '%';
+                }
+              }
             }).success(function(data, status, headers, config) {
               // callback success
             }).then(onSuccess, onError);
