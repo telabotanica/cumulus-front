@@ -61,13 +61,11 @@
         if (config.url.substring(0, filesServiceUrl.length) == filesServiceUrl) {
           if (authService.isAuthenticated()) {
             config.headers['Authorization'] = authService.token();
-            console.log('authenticated');
           } else {
             authService.refreshToken().then(function(response) {
               authService.setCredentials(response.data);
 
               config.headers['Authorization'] = authService.token();
-              console.log('refreshing');
             }); // silent failure, @todo: handle refresh max try
           }
         }
@@ -228,11 +226,6 @@
 
       return JSON.parse(atob(parts[1]));
     }
-
-    // function setCredentials(username, token) {
-    //   $http.defaults.headers.common['Authorization'] = 'Basic ' + token.info;
-    //   $cookieStore.put('globals', $rootScope.globals);
-    // }
   }])
 
   .directive('filePath', ['configService', function(configService) {

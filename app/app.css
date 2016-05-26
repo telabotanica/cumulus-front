@@ -12,7 +12,6 @@ thead {
     display: flex;
     flex-direction: column;
     min-height: 100%;
-    margin: 0 20px;
 }
 
 #main-title {
@@ -23,6 +22,7 @@ thead {
     display: flex;
     background-color: #f5f5f5;
     margin: 0;
+    height: 36px;
 }
 
 #breadcrumb {
@@ -45,22 +45,23 @@ ol.breadcrumb {
     flex-direction: column;
 }
 
-#dropzone {
-    flex: 1;
-}
-
 /* Details pane */
 
 #details-pane {
-    float: right;
-    width: 365px;
     border-left: 1px solid #ddd;
     padding: 8px;
     margin-left: 8px;
+    min-width: 0;
 }
 
 #details-table > tr > td {
     padding: 8px;
+}
+
+#details-pane .file-name {
+    word-break: break-word;
+    white-space: initial;
+    line-height: 30px;
 }
 
 .details-pane-data-cell {
@@ -129,9 +130,24 @@ ol.breadcrumb {
 
 /* Dropzone */
 
-#dropzone {
+#drop-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9000;
+}
+
+#dropzone #files-list tbody {
     border: 3px dashed transparent;
+    transition: border-color .5s ease-in-out;
     z-index: 1000;
+}
+
+#dropzone tr {
+    opacity: 1;
+    transition: opacity .5s ease-in-out;
 }
 
 #dropzone-modal {
@@ -164,23 +180,30 @@ ol.breadcrumb {
 
 /* Drop context */
 
-#dropzone.dragover,
+#dropzone.dragover #files-list tbody,
 #dropzone-new-folder.dragover {
     border: 3px dashed #38d;
 }
 
-.dragover tr {
+#dropzone.dragover tr {
     opacity: 0.6;
 }
 
-.dragover #dropzone-new-folder {
+#dropzone.dragover #dropzone-new-folder {
     opacity: 1;
 }
 
 /* General utils classes */
+.flex {
+    display: flex;
+}
 
 .flex1 {
     flex: 1;
+}
+
+.pull-right-flex {
+    margin-left: auto;
 }
 
 .width100 {
@@ -234,6 +257,12 @@ ol.breadcrumb {
 
 .separator {
     border-top: 1px solid #e1e1e1;
+}
+
+.ellipsis-content {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /* Notifications */

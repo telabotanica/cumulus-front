@@ -16,7 +16,8 @@
     "ng-contextmenu": "~0.4.x",
     "angular-moment": "~0.10.x",
     "angular-modal-service": "~0.6.x",
-    "ngtoast": "~1.5.x"
+    "ngtoast": "~1.5.x",
+    "richardba/cc-icons": "*"
   },
   "resolutions": {
     "angular": "~1.5.x"

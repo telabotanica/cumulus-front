@@ -3,13 +3,12 @@
 
   angular.module('cumulus.files', [])
 
-  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'configService', 'authService',
-    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, configService, authService) {
+  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'configService', 'authService', 'ModalService',
+    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, configService, authService, ModalService) {
       var vm = this;
 
       vm.currentPathArray = [];
       vm.currentPath = configService.getAbstractionPath();
-      vm.currentPathAbstraction = configService.getAbstractionPathLength();
       angular.forEach(vm.currentPath.split('/'), function(crumb) {
         vm.currentPathArray.push(crumb);
       });
@@ -71,12 +70,13 @@
 
         $rootScope.$broadcast('refreshBreadcrumbs');
 
-        vm.filesList = FilesListService.getByPath(vm.currentPath);
-
-        // If target is empty we go back to root
-        if (vm.filesList.folders.length === 0 || vm.filesList.files.length === 0) {
-          $rootScope.$broadcast('openFolder', '/');
-        }
+        vm.filesList = FilesListService.getList();
+        FilesListService.getByPath(vm.currentPath).error(function(data) {
+          // If target folder is empty we go back to root
+          if (targetFolder !== configService.getAbstractionPath()) {
+            $rootScope.$broadcast('openAbsoluteFolder', configService.getAbstractionPath());
+          }
+        });
       }
 
       function openAbsoluteFolder(targetFolder) {
@@ -99,10 +99,60 @@
         vm.openAbsoluteFolder(path);
       });
 
-      $rootScope.$on('searchClosed', function(event) {
+      $rootScope.$on('searchClosed', function() {
         vm.filesList = FilesListService.getList();
         vm.searchResultsFilesList = [];
         $rootScope.$broadcast('refreshBreadcrumbs');
+      });
+
+      $rootScope.$on('uploadEvent:start', function() {
+        ModalService.showModal({
+          templateUrl: configService.get('ressourcesPath') + 'modal/upload-status.html',
+          controller: function($scope, $rootScope, close) {
+            var vm = this;
+
+            vm.text = 'Uploading...';
+
+            var unsubscribeProgressEvent = $rootScope.$on('uploadEvent:progress', function(event, text) {
+              console.log('text:', text);
+              vm.text = text;
+
+              unsubscribeProgressEvent();
+            });
+
+            var unsubscribeSuccessEvent = $rootScope.$on('uploadEvent:success', function(event, folder) {
+              console.log('hastoclose');
+              vm.close();
+
+              $rootScope.$broadcast('openAbsoluteFolder', folder);
+              unsubscribeSuccessEvent();
+            });
+
+            vm.close = function(result) {
+              close(result, 200);
+            };
+          },
+          controllerAs: 'uploadModalCtrl',
+          inputs: {
+            $rootScope: $rootScope
+          },
+          appendElement: angular.element(document.getElementById('modal'))
+        }).then(function(modal) {
+          modal.element.modal();
+
+          modal.close.then(function(userResponse) {
+            console.log('userResponse', userResponse);
+            if ('abort' == userResponse) {
+              // emit abort signal
+              $rootScope.$broadcast('uploadEvent:abort');
+            }
+
+            // @todo do that at the right place and angular way
+            $('#dropzone').removeClass('dragover');
+            $('#dropzone-modal').addClass('hide');
+            $('#dropzone-new-folder').addClass('hide');
+          });
+        });
       });
 
       vm.openAbsoluteFolder(vm.currentPath);

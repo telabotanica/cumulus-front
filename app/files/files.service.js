@@ -3,7 +3,7 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function(config, $http, Upload, breadcrumbsService, ngToast, configService, authService) {
+  .factory('FilesListService', function($rootScope, config, $http, Upload, breadcrumbsService, ngToast, configService, authService) {
     var vm = this;
 
     vm.filesList = {
@@ -93,24 +93,12 @@
 
     /**
      * Get files and folders for given path
-     * @param  {string} path Project relative path
-     * @return {Object}
+     *
+     * @param      {string}  path    Project relative path
+     * @return     {Promise}
      */
-    function getByPath(path, callback) {
-      /* cleaning results, test/root env purpose */
-      var searchAndDestroy = function(folders) {
-        var cleanFolders = [];
-        for (var index in folders) {
-          var folder = folders[index];
-            if (folder['folder'] !== '/' && folder['name'] !== '') {
-              cleanFolders.push(folder);
-            }
-        }
-
-        return cleanFolders;
-      };
-
-      $http.get(config.filesServiceUrl + path)
+    function getByPath(path) {
+      return $http.get(config.filesServiceUrl + path)
         .success(function(data) {
           _addFilesOwnerInfo(data.files.results).then(function(files) {
             vm.filesList.files = files;
@@ -118,18 +106,11 @@
           vm.filesList.folders = data.folders.results;
         })
         .error(function() {
+          console.log('erruer tavu lol');
           vm.filesList.files = [];
           vm.filesList.folders = [];
         })
       ;
-
-      // $http.get(config.filesServiceUrl + '/api/get-folders' + path)
-      //   .success(function(folders) {
-      //     vm.filesList.folders = searchAndDestroy(folders);
-      //   })
-      // ;
-
-      return vm.filesList;
     }
 
     function getPathInfo(path) {
@@ -345,19 +326,20 @@
 
     /**
      * Delete a file from the storage
-     * @param  {Object} file The file aimed to be deleted
+     *
+     * @param      {Object}  file    The file aimed to be deleted
+     * @return     {Promise}
      */
-    function deleteFile(file, callback) {
-      $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey)
-        .success(function(data) {
-          callback(data.path);
-        }
-      );
+    function deleteFile(file) {
+      return $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey);
     }
 
     /**
      * Rename a file already stored
-     * @param  {Object} file The file aimed to be renamed
+     *
+     * @param      {Object}    file         The file aimed to be renamed
+     * @param      {string}    newFileName  The new file name
+     * @param      {Function}  callback     The callback
      */
     function renameFile(file, newFileName, callback) {
       $http.post(config.filesServiceUrl + '/' + file.fkey, {
@@ -372,52 +354,117 @@
       uploadFilesInFolder('', files, onSuccess, onError);
     }
 
+
+    /**
+     * Upload files
+     *
+     * @param      {string}    folderName  The destination folder name
+     * @param      {<type>}    files       The files to upload
+     * @param      {Function}  onSuccess   The on success callback
+     * @param      {Function}  onError     The on error callback
+     */
     function uploadFilesInFolder(folderName, files, onSuccess, onError) {
       if (files && files.length) {
         var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
-          currentPath,
-          baseUrl;
+          filesCount = files.length,
+          destinationPath = '',
+          successCount = 0,
+          uploadCount = 0,
+          file;
 
-        currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-        baseUrl = config.filesServiceUrl + (currentPath !== '' ? '/' + currentPath : currentPath);
-
+        destinationPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+        if (destinationPath !== '') {
+          destinationPath = '/' + destinationPath;
+        }
+        // adding new folder target name to upload path
         if (folderName && folderName.length) {
-          baseUrl = baseUrl + '/' + folderName;
+          destinationPath = destinationPath + '/' + folderName;
         }
 
-        for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          if (!file.$error) {
-            Upload.upload({
-              url: baseUrl + '/' + file.name,
-              method: 'POST',
-              data: {
-                file: file,
-                license: 'CC-BY-SA',
-                permissions: 'wr',
-                groups: configService.get('group')
-              }
-            }).progress(function(evt) {
-              var percentCompleted;
-              file.uploadStatus = 'Uploading...';
+        $rootScope.$broadcast('uploadEvent:start');
 
-              if (evt.type == 'progress' && evt.lengthComputable) {
-                percentCompleted = Math.round(evt.loaded / evt.total * 100);
-                if (percentCompleted == 100) {
-                    file.uploadStatus = 'Saving...';
-                } else {
-                    file.uploadStatus = percentCompleted + '%';
+        // Recursively called, loop on files to upload them one by one
+        (function uploadFilesOneByOne(files) {
+
+          // iterating over files to upload
+          if (files && files.length) {
+            file = files.shift();
+
+            uploadCount++;
+
+            // takes one file at a time
+            if (angular.isUndefined(file.upload)) {
+              // Attach all upload info to file
+              file.upload = Upload.upload({
+                url: config.filesServiceUrl + destinationPath + '/' + file.name,
+                method: 'POST',
+                data: {
+                  file: file,
+                  license: 'CC-BY-SA',
+                  permissions: 'wr',
+                  groups: configService.get('group')
                 }
-              }
-            }).success(function(data, status, headers, config) {
-              // callback success
-            }).then(onSuccess, onError);
+              })
 
-            $('#dropzone').removeClass('dragover');
-            $('#dropzone-modal').addClass('hide');
-            $('#dropzone-new-folder').addClass('hide');
+              .progress(function(evt) {
+                // computing upload progress
+                var percentCompleted, fileUploadStatus;
+                if (evt.type == 'progress' && evt.lengthComputable) {
+                  percentCompleted = Math.round(evt.loaded / evt.total * 100);
+                  if (percentCompleted == 100) {
+                    fileUploadStatus = 'Saving...';
+                  } else {
+                    fileUploadStatus = percentCompleted + '%';
+                  }
+
+                  // formating upload progress (ex: "choucroute.wav (13/42): 666%")
+                  $rootScope.$broadcast('uploadEvent:progress', (function() {
+                    if (1 == filesCount) {
+                      return evt.config.data.file.name + ': ' + fileUploadStatus;
+                    } else {
+                      return uploadCount + '/' + filesCount + ': ' + fileUploadStatus + ' - ' + evt.config.data.file.name;
+                    }
+                  })());
+                }
+              })
+
+              .success(function(data, status, headers, config) {
+                // current file upload successful, hurray!
+                file.upload = { status: 'success' };
+                successCount++;
+              })
+
+              .error(function(data, status, headers, config) {
+                if (status >= 500) {
+                  file.upload = { status: 'error', error: data.error };
+                  ngToast.danger('Uhoh, something went wrong...' + (data.error ? ' "' + data.error + '"' : ''));
+                }
+              });
+
+              // recursion
+              // then has to be unchained to preserve orginal promise (including abort())
+              file.upload.then(function() {
+                console.log('then');
+                uploadFilesOneByOne(files);
+              });
+            }
+          } else {
+            // Successful upload to folder event
+            $rootScope.$broadcast('uploadEvent:success', destinationPath);
           }
-        }
+        })(files);
+
+        var unregisterAbortEvent = $rootScope.$on('uploadEvent:abort', function() {
+          // aborting current upload
+          if (angular.isDefined(file.upload)) {
+            console.log('aborted file:', file);
+            file.upload.abort();
+          }
+          // prompting user
+          ngToast.warning('Upload aborted, ' + successCount + ' files uploaded.');
+
+          unregisterAbortEvent(); //@todo: find a better way to do this
+        });
       }
     }
   });

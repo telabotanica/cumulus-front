@@ -24,12 +24,11 @@
 
   <div id="files-explorer">
 
-    <div id="dropzone" class="drop-box"
+    <div id="dropzone" class="flex1" ng-class="{ dragover: addFilesCtrl.dropTarget == 'currentFolder' }"
       ng-controller="AddFilesController as addFilesCtrl"
       name="fileUpload"
       ngf-drop
       ng-model="files"
-      ngf-drag-over-class="'dragover'"
       ngf-multiple="true"
       ngf-allow-dir="true"
       ngf-drag="addFilesCtrl.drag($isDragging, $class, $event)">
@@ -38,33 +37,33 @@
         <table id="files-table" ng-show="filesListCtrl.filesList.files.length !== 0 || filesListCtrl.filesList.folders.length !== 0" class="table table-hover">
           <thead>
             <tr>
-              <td class="col-md-5 col-lg-5">
+              <td>
                 <sort-head displayed-name="'Name'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
-              <td class="col-md-2 col-lg-2">
+              <td>
                 <sort-head displayed-name="'Owner'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
-              <td class="col-md-2 col-lg-2">
+              <td>
                 <sort-head displayed-name="'Modified'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
-              <td class="col-md-1 col-lg-1">
+              <td>
                 <sort-head displayed-name="'File size'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
-              <td class="col-md-1 col-lg-1">
+              <td>
                 <sort-head displayed-name="'License'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
-              <td class="col-md-1 col-lg-1"/>
+              <td/>
             </tr>
           </thead>
           <tbody>
-            <tr id="dropzone-new-folder" class="drop-box hide"
+            <tr id="dropzone-new-folder" class="new-folder-element" ng-class="{ dragover: addFilesCtrl.dropTarget == 'newFolder' }"
+              ng-show="addFilesCtrl.dropTarget"
               ng-model="filesNewFolder"
               name="fileUploadInNewFolder"
               ngf-drop
-              ngf-drag-over-class="'dragover'"
               ngf-multiple="true"
               ngf-allow-dir="true"
-              ngf-drag="addFilesCtrl.dragNewFolder($isDragging, $class, $event)"
+              ngf-drag="addFilesCtrl.drag($isDragging, $class, $event)"
               ng-mouseenter="hover=true" ng-mouseleave="hover=false">
               <td>
                 <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
@@ -77,8 +76,9 @@
               <td/>
               <td/>
             </tr>
+
             <!-- Folders list -->
-            <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+            <tr class="folder-element" ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
               <td>
                 <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                 <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
@@ -90,8 +90,9 @@
               <td/>
               <td/>
             </tr>
+
             <!-- Files list -->
-            <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0"
+            <tr class="file-element" ng-if="filesListCtrl.searchResultsFilesList.length == 0"
               ng-repeat="file in filesListCtrl.filesList.files"
               data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html"
               ng-model="file"
@@ -109,8 +110,12 @@
               <td><file-license license="{{ file.license }}"></file-license></td>
               <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
             </tr>
+
             <!-- Search results files list -->
-            <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html" ng-model="file" ng-click="showDetails(file)">
+            <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files"
+              data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html"
+              ng-model="file"
+              ng-click="showDetails(file)">
               <td>
                 <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
                 <span ng-click="filesListCtrl.openAbsoluteFolder(file.path); filesListCtrl.closeSearch()" class="discret"> (<file-path path="{{ file.path }}"></file-path>)</span>
@@ -133,7 +138,7 @@
       </div>
     </div>
 
-    <div id="details-pane" ng-show="isDetailsPaneOpened">
+    <div id="details-pane" class="flex1" ng-show="isDetailsPaneOpened">
       <details-pane></details-pane>
     </div>
   </div>
@@ -141,11 +146,11 @@
 
 <div id="modal"></div>
 
-<div id="dropzone-modal" class="hide">
+<!-- <div id="dropzone-modal" class="hide">
   <div id="dropzone-text">
     <p>Drop files to upload them to:</p>
     <p id="dropzone-folder-name"><i class="glyphicon glyphicon-file white" aria-hidden="true"></i> folderName</p>
   </div>
-</div>
+</div> -->
 
 <toast></toast>

@@ -35,11 +35,9 @@
         }
 
         vm.subject = subject;
-        vm.isModalOpened = true;
 
         vm.close = function(result) {
           close(result, 200);
-          vm.isModalOpened = false;
         };
       };
 
@@ -76,9 +74,16 @@
       function deleteFileDialog(file) {
         openModal('delete-file', file, function(deletionConfirmed) {
           if (deletionConfirmed) {
-            FilesListService.deleteFile(file, function(path) {
+            FilesListService.deleteFile(file).then(function(response) {
               ngToast.create('File deleted');
-              $rootScope.$broadcast('openAbsoluteFolder', path);
+              console.log(response.data.path);
+              $rootScope.$broadcast('openAbsoluteFolder', response.data.path);
+            }, function(response) {
+              if (response.status >= 500) {
+                ngToast.danger('Uhoh, something went wrong...' + (response.data.error ? ' "' + response.data.error + '"' : ''));
+              } else {
+                ngToast.danger(response.statusText);
+              }
             });
           }
         });

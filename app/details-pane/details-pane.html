@@ -1,13 +1,18 @@
 <div ng-if="detailsPaneCtrl.details.name && detailsPaneCtrl.details.size">
-  <h3><span class="{{ detailsPaneCtrl.details.mimetype | mimetypeIcon }}"></span> {{ detailsPaneCtrl.details.name }}</h3>
+  <h3 class="flex">
+    <span class="{{ detailsPaneCtrl.details.mimetype | mimetypeIcon }}"></span> <span class="file-name ellipsis-content">{{ detailsPaneCtrl.details.name }}</span>
+  </h3>
 
   <separator></separator>
 
   <details-pane-data datasource="detailsPaneCtrl.details.size | formatByte" dataname="'Size'"></details-pane-data>
-  <details-pane-data datasource="detailsPaneCtrl.details.path" dataname="'Location'"></details-pane-data>
+  <!-- <details-pane-data datasource="detailsPaneCtrl.details.path" dataname="'Location'"></details-pane-data> -->
   <details-pane-data datasource="detailsPaneCtrl.details.creation_date" dataname="'Created'"></details-pane-data>
   <details-pane-data datasource="detailsPaneCtrl.details.last_modification_date" dataname="'Modified'"></details-pane-data>
+  <br>
   <details-pane-data datasource="detailsPaneCtrl.details.owner" dataname="'Owner'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.license" dataname="'License'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.permissions" dataname="'Permissions'"></details-pane-data>
 
   <separator></separator>
 
