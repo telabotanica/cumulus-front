@@ -7,9 +7,6 @@
     function($scope, $rootScope, Upload, $document, $timeout, breadcrumbsService, ngToast, FilesListService, ModalService, configService) {
       var vm = this;
 
-      vm.globalDragover = false;
-      vm.newFolderDragover = false;
-
       $scope.$watch('files', function() {
         console.log(vm.dropInNewFolder ? 'uploadNewFolder' : 'upload');
 

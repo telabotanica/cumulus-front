@@ -2,4 +2,5 @@
   <span class="glyphicon glyphicon-home"></span>
   <li ng-repeat-start="crumb in crumbsCtrl.crumbs" ng-if="crumbsCtrl.crumbs.length > 1" ng-click="crumbsCtrl.openFolder(crumb.path)" ng-hide="$last"><a href="#">{{ crumb.name }}</a></li>
   <li ng-repeat-end ng-class="{'active':$last}" ng-click="crumbsCtrl.openFolder(crumb.path)" ng-show="$last">{{ crumb.name }}</li>
+  <li><add-file-button></add-file-button></li>
 </ol>

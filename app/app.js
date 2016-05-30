@@ -30,6 +30,31 @@
   //   };
   // })
 
+  .directive('addFileButton', ['configService', function(configService) {
+    var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
+
+      $scope.$watch('files', function() {
+        FilesListService.uploadFiles($scope.files, function() {
+          var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
+            currentPath;
+
+          currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+          $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
+          ngToast.create('File(s) uploaded');
+        });
+      }
+    };
+
+    var path = configService.get('ressourcesPath');
+
+    return {
+      restrict: 'E',
+      controller: AddFileButtonController,
+      controllerAs: 'addFileButtonCtrl',
+      templateUrl: path + 'breadcrumbs/breadcrumbs.html'
+    }
+  }])
+
   .directive('fileLicense', ['configService', function(configService) {
     var FileLicenseController = function($scope) {
       this.license = $scope.license;
