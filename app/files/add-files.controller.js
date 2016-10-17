@@ -3,8 +3,8 @@
 
   angular.module('cumulus.files')
 
-  .controller('AddFilesController', ['$scope', '$rootScope', 'Upload', '$document', '$timeout', 'breadcrumbsService', 'ngToast', 'FilesListService', 'ModalService', 'configService',
-    function($scope, $rootScope, Upload, $document, $timeout, breadcrumbsService, ngToast, FilesListService, ModalService, configService) {
+  .controller('AddFilesController', ['$scope', '$rootScope', 'Upload', '$document', '$timeout', 'breadcrumbsService', 'ngToast', 'FilesListService', 'ModalService', 'config',
+    function($scope, $rootScope, Upload, $document, $timeout, breadcrumbsService, ngToast, FilesListService, ModalService, config) {
       var vm = this;
 
       $scope.$watch('files', function() {
@@ -12,7 +12,7 @@
 
         if (vm.dropInNewFolder) {
           ModalService.showModal({
-            templateUrl: configService.get('ressourcesPath') + 'modal/create-folder.html',
+            templateUrl: config.ressourcesPath + 'modal/create-folder.html',
             controller: function($scope, files, close) {
               var vm = this;
 

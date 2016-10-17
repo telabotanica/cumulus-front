@@ -3,7 +3,7 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function($rootScope, config, $http, Upload, breadcrumbsService, ngToast, configService, authService) {
+  .factory('FilesListService', function($rootScope, config, $http, Upload, breadcrumbsService, ngToast, authService) {
     var vm = this;
 
     vm.filesList = {
@@ -45,7 +45,7 @@
       userIds = userIds.filter(function(n) { return n != null });
 
       var userInfo = {};
-      return $http.get('h' + config.userInfoByIdUrl + userIds.join(',')).then(function(response) {
+      return $http.get(config.userInfoByIdUrl + userIds.join(',')).then(function(response) {
         // service response format is not consistent
         // has to index info if only one id is asked
         if (userIds.length == 1) {
@@ -143,7 +143,7 @@
      */
     function fileSearch(query, updateFilesList) {
       if (query.length > 0) {
-        var path = configService.getAbstractionPath();
+        var path = config.abstractionPath;
         $http.get(config.filesServiceUrl + '/api/search/?path_recursive=true&path=' + path + '&name=' + query)
           .success(function(data) {
             updateFilesList({
@@ -404,7 +404,7 @@
                   file: file,
                   license: 'CC-BY-SA',
                   permissions: 'wr',
-                  groups: configService.get('group')
+                  groups: config.group
                 }
               })
 

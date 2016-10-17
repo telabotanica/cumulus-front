@@ -3,7 +3,7 @@
 
   angular.module('cumulus.details', [])
 
-  .directive('detailsPane', ['configService', function(configService) {
+  .directive('detailsPane', ['config', function(config) {
     var DetailsPaneController = function($rootScope) {
       var vm = this;
 
@@ -12,7 +12,7 @@
       });
     };
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       restrict: 'E',

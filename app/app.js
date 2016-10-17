@@ -30,37 +30,37 @@
   //   };
   // })
 
-  .directive('addFileButton', ['configService', function(configService) {
-    var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
+  // .directive('addFileButton', ['config', function(config) {
+  //   var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
 
-      $scope.$watch('files', function() {
-        FilesListService.uploadFiles($scope.files, function() {
-          var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
-            currentPath;
+  //     $scope.$watch('files', function() {
+  //       FilesListService.uploadFiles($scope.files, function() {
+  //         var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
+  //           currentPath;
 
-          currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-          $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
-          ngToast.create('File(s) uploaded');
-        });
-      }
-    };
+  //         currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+  //         $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
+  //         ngToast.create('File(s) uploaded');
+  //       });
+  //     });
+  //   };
 
-    var path = configService.get('ressourcesPath');
+  //   var path = config.ressourcesPath;
 
-    return {
-      restrict: 'E',
-      controller: AddFileButtonController,
-      controllerAs: 'addFileButtonCtrl',
-      templateUrl: path + 'breadcrumbs/breadcrumbs.html'
-    }
-  }])
+  //   return {
+  //     restrict: 'E',
+  //     controller: AddFileButtonController,
+  //     controllerAs: 'addFileButtonCtrl',
+  //     templateUrl: path + 'breadcrumbs/breadcrumbs.html'
+  //   }
+  // }])
 
-  .directive('fileLicense', ['configService', function(configService) {
+  .directive('fileLicense', ['config', function(config) {
     var FileLicenseController = function($scope) {
       this.license = $scope.license;
-    }
+    };
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       restrict: 'E',
@@ -97,7 +97,7 @@
 
         return config;
       }
-    }
+    };
 
     return authInjector;
   }])
@@ -134,7 +134,7 @@
     $httpProvider.interceptors.push('authInjector', 'sessionRecoverer');
   }])
 
-  .factory('authService', ['$rootScope', '$http', 'configService', function($rootScope, $http, configService) {
+  .factory('authService', ['$rootScope', '$http', 'config', function($rootScope, $http, config) {
     var vm = this;
     vm.login = '';
     vm.role = 'anonymous';
@@ -182,7 +182,7 @@
      * @return     {promise}  The request promise
      */
     function login(login, password) {
-      return $http.get(configService.get('authUrl') + '/login' + '?login=' + login + '&password=' + encodeURIComponent(password));
+      return $http.get(config.authUrl + '/login' + '?login=' + login + '&password=' + encodeURIComponent(password));
     }
 
     /**
@@ -191,7 +191,7 @@
      * @return     {promise}  The request promise
      */
     function logout() {
-      return $http.get(configService.get('authUrl') + '/logout').then(function(response) {
+      return $http.get(config.authUrl + '/logout').then(function(response) {
         return response.data;
       });
     }
@@ -216,7 +216,8 @@
      * @return     {promise}  The request promise
      */
     function refreshToken() {
-      return $http.get(configService.get('tokenUrl'), { withCredentials: true });
+      console.log(config.tokenUrl);
+      return $http.get(config.tokenUrl, { withCredentials: true });
     }
 
     function setCredentials(auth) {
@@ -253,9 +254,9 @@
     }
   }])
 
-  .directive('filePath', ['configService', function(configService) {
+  .directive('filePath', ['config', function(config) {
     function FilePathController($scope) {
-      var displayedPath = $scope.path.replace(configService.getAbstractionPath(), '');
+      var displayedPath = $scope.path.replace(config.abstractionPath, '');
       if ('' === displayedPath) {
         displayedPath = '/';
       }
@@ -274,83 +275,12 @@
     }
   }])
 
-  .factory('configService', function() {
-    var vm = this;
-
-    vm.config = [];
-    if ('undefined' !== typeof tarace) {
-      vm.config = tarace;
-      console.log(tarace);
-    }
-
-    return {
-      get: get,
-      getConfig: getConfig,
-      setConfig: setConfig,
-      getAbstractionPathLength: getAbstractionPathLength,
-      getAbstractionPath: getAbstractionPath,
-      getRessourcesPath: getRessourcesPath
-    };
-
-    function get(property) { // should be named 'get'
-      // en attendant de faire un truc bien genre ça : https://jsfiddle.net/e8tEX/46/
-      // var config = angular.element(document.getElementById('truc')).data('config');
-      return angular.isDefined(vm.config[property]) ? vm.config[property] : '' ;
-    }
-
-    function getConfig() {
-      return vm.config ;
-    }
-
-    function setConfig(config) {
-      vm.config = config;
-    }
-
-    // Pas sûr que ça doive rester dans ce service ->
-    // Ptetr un service qui encapsule et sert exclusivement les params liés
-    // aux abstractions (y'en a pas 100000 mais bon)
-
-    /**
-     * Get the files tree abstraction path length.
-     *
-     * @return     {number}  Abstraction path length.
-     */
-    function getAbstractionPathLength() {
-      if (angular.isDefined(vm.config['projectFilesRootPath'])) {
-        return vm.config['projectFilesRootPath'].split('/').filter(function(n) { return n !== '' }).length;
-      }
-
-      return 0;
-    }
-
-    /**
-     * Get the files tree abstraction path.
-     *
-     * @return     {string}  Abstraction path.
-     */
-    function getAbstractionPath() {
-      if (angular.isDefined(vm.config['projectFilesRootPath'])) {
-        return vm.config['projectFilesRootPath'];
-      }
-
-      return '';
-    }
-
-    function getRessourcesPath() {
-      if (angular.isDefined(vm.config['ressourcesPath'])) {
-        return vm.config['ressourcesPath'];
-      }
-
-      return '';
-    }
-  })
-
   // Inutile, se charge trop tard...
-  // .directive('config', ['configService', function(configService) {
+  // .directive('config', ['config', function(config) {
   //   function ConfigController($attrs) {
   //     console.log($attrs.config);
   //     if (angular.isDefined($attrs.config)) {
-  //       configService.setConfig($attrs.config);
+  //       config.setConfig($attrs.config);
   //     }
   //   }
 
@@ -360,7 +290,7 @@
   //   }
   // }])
 
-  .directive('sortHead', ['configService', function(configService) {
+  .directive('sortHead', ['config', function(config) {
     function SortHeadController($rootScope, $scope) {
       var vm = this;
 
@@ -381,7 +311,7 @@
       });
     }
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       restrict: 'E',

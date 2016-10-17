@@ -3,7 +3,7 @@
 
   angular.module('cumulus.search', [])
 
-  .directive('filesearch', ['configService', function(configService) {
+  .directive('filesearch', ['config', function(config) {
     var FileSearchController = function($rootScope, $scope) {
       var vm = this;
 
@@ -25,7 +25,7 @@
       };
     };
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       restrict: 'E',

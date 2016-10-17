@@ -3,9 +3,9 @@
 
   angular.module('cumulus.details')
 
-  .directive('detailsPaneData', ['configService', function(configService) {
+  .directive('detailsPaneData', ['config', function(config) {
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       restrict: 'E',

@@ -3,7 +3,7 @@
 
   angular.module('cumulus.breadcrumbs', [])
 
-  .directive('breadcrumbs', ['configService', function(configService) {
+  .directive('breadcrumbs', ['config', function(config) {
     var CrumbsController = function($rootScope, breadcrumbsService) {
       var vm = this;
 
@@ -15,11 +15,11 @@
         vm.crumbs = [];
         vm.crumbs.push({
           'name': 'Root',
-          'path': configService.getAbstractionPath()
+          'path': config.abstractionPath
         });
         var path = breadcrumbsService.getCurrentPathCrumbs();
         if (path.length > 0) {
-          for (var i = (1 + configService.getAbstractionPathLength()); i<path.length; i++) {
+          for (var i = (1 + config.abstractionPathLength); i<path.length; i++) {
             vm.crumbs.push({
               name: path[i],
               path: path.slice(0, i+1).join('/')
@@ -35,7 +35,7 @@
       });
     };
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       controller: CrumbsController,

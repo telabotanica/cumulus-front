@@ -2,27 +2,23 @@
   'use strict';
 
   angular.module('utils.config', [])
-  // Just one config set for now, if more, move it to a /config folder and
-  // it's own module root, like config.main and config.pied
 
-  // .constant('config', function(configService) {
-  //   var baseConfig = {
-  //     ver: '0.1',
-  //     filesServiceUrl: 'http://files.cumulus.dev',
-  //     userInfoByIdUrl: 'http://annuaire.dev/service:annuaire:utilisateur/infosParIds/'
-  //   };
+  .constant('config', (function() {
+    var config = {
+      ver: '0.1',
+      filesServiceUrl: 'http://files.cumulus.dev',
+      userInfoByIdUrl: 'http://annuaire.dev/service:annuaire:utilisateur/infosParIds/',
+      abstractionPath: '/mon',
+      ressourcesPath: '', // in including mode, represents the path of application root path
+      group: null,
+      authUrl: 'https://annuaire.dev/service:annuaire:auth',
+      tokenUrl: 'https://annuaire.dev/service:annuaire:auth/identite'
+    };
 
-  //   var config = angular.extend({}, baseConfig, configService.getConfig());
-  //   console.log('config:', config);
-  //   console.log('sercviceConfig:', configService.getConfig());
+    console.log('papuch',JSON.parse($('#cumulus-config-holder').attr('data-config')));
 
-  //   return config;
-  // }) // doesn't work but we need to merge base config and context config
+    config.abstractionPathLength = config['abstractionPath'].split('/').filter(function(n) { return n !== '' }).length;
 
-  .constant('config', {
-    ver: '0.1',
-    filesServiceUrl: 'http://files.cumulus.dev',
-    userInfoByIdUrl: 'http://annuaire.dev/service:annuaire:utilisateur/infosParIds/'
-  });
-
+    return config;
+  })());
 })();

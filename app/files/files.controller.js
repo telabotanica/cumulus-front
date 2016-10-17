@@ -3,12 +3,13 @@
 
   angular.module('cumulus.files', [])
 
-  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'configService', 'authService', 'ModalService',
-    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, configService, authService, ModalService) {
+  .controller('FilesListController', ['$http', 'breadcrumbsService', '$scope', '$rootScope', 'FilesListService', 'config', 'authService', 'ModalService',
+    function($http, breadcrumbsService, $scope, $rootScope, FilesListService, config, authService, ModalService) {
       var vm = this;
 
       vm.currentPathArray = [];
-      vm.currentPath = configService.getAbstractionPath();
+      console.log('lol',config);
+      vm.currentPath = config.abstractionPath;
       angular.forEach(vm.currentPath.split('/'), function(crumb) {
         vm.currentPathArray.push(crumb);
       });
@@ -24,7 +25,7 @@
       vm.downloadUrl = function() {
         return config.filesServiceUrl + vm.currentPath + '/';
       }
-      vm.contextMenuPrefix = configService.getRessourcesPath();
+      vm.contextMenuPrefix = config.ressourcesPath;
 
       $scope.sortFiles = sortFiles;
 
@@ -73,8 +74,8 @@
         vm.filesList = FilesListService.getList();
         FilesListService.getByPath(vm.currentPath).error(function(data) {
           // If target folder is empty we go back to root
-          if (targetFolder !== configService.getAbstractionPath()) {
-            $rootScope.$broadcast('openAbsoluteFolder', configService.getAbstractionPath());
+          if (targetFolder !== config.abstractionPath) {
+            $rootScope.$broadcast('openAbsoluteFolder', config.abstractionPath);
           }
         });
       }
@@ -107,7 +108,7 @@
 
       $rootScope.$on('uploadEvent:start', function() {
         ModalService.showModal({
-          templateUrl: configService.get('ressourcesPath') + 'modal/upload-status.html',
+          templateUrl: config.ressourcesPath + 'modal/upload-status.html',
           controller: function($scope, $rootScope, close) {
             var vm = this;
 

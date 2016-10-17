@@ -3,8 +3,8 @@
 
   angular.module('cumulus.modal', [])
 
-  .controller('ContextMenuController', ['$rootScope', 'FilesListService', 'ModalService', 'ngToast', 'configService',
-    function($rootScope, FilesListService, ModalService, ngToast, configService) {
+  .controller('ContextMenuController', ['$rootScope', 'FilesListService', 'ModalService', 'ngToast', 'config',
+    function($rootScope, FilesListService, ModalService, ngToast, config) {
       var vm = this;
 
       vm.deleteFileDialog = deleteFileDialog;
@@ -43,7 +43,7 @@
 
       function openModal(subject, attachment, callback) {
         ModalService.showModal({
-          templateUrl: configService.get('ressourcesPath') + 'modal/' + subject + '.html',
+          templateUrl: config.ressourcesPath + 'modal/' + subject + '.html',
           controller: ModalController,
           controllerAs: 'modalCtrl',
           inputs: {

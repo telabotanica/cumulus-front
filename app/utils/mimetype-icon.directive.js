@@ -3,7 +3,7 @@
 
   angular.module('utils.mimetype', [])
 
-  .directive('mimetypeIcon', ['configService', function(configService, $timeout, $parse) {
+  .directive('mimetypeIcon', ['config', function(config, $timeout, $parse) {
 
     var fileIcon = function fileIcon(mimetype) {
       var mediatype = mimetype.split('/');
@@ -21,7 +21,7 @@
       }
     };
 
-    var path = configService.get('ressourcesPath');
+    var path = config.ressourcesPath;
 
     return {
       restrict: 'A',
