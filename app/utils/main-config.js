@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  var heritedConf = $('#cumulus-config-holder').data('config') || {};
+
   angular.module('utils.config', [])
 
   .constant('config', (function() {
@@ -15,7 +17,7 @@
       tokenUrl: 'https://annuaire.dev/service:annuaire:auth/identite'
     };
 
-    console.log('papuch',JSON.parse($('#cumulus-config-holder').attr('data-config')));
+    config = angular.merge(config, heritedConf);
 
     config.abstractionPathLength = config['abstractionPath'].split('/').filter(function(n) { return n !== '' }).length;
 
