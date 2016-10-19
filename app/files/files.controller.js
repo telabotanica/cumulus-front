@@ -8,7 +8,6 @@
       var vm = this;
 
       vm.currentPathArray = [];
-      console.log('lol',config);
       vm.currentPath = config.abstractionPath;
       angular.forEach(vm.currentPath.split('/'), function(crumb) {
         vm.currentPathArray.push(crumb);
