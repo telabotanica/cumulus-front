@@ -45,7 +45,7 @@
       userIds = userIds.filter(function(n) { return n != null });
 
       var userInfo = {};
-      return $http.get(config.userInfoByIdUrl + userIds.join(',')).then(function(response) {
+      return $http.get(config.userInfoByIdUrl + '/' + userIds.join(',')).then(function(response) {
         // service response format is not consistent
         // has to index info if only one id is asked
         if (userIds.length == 1) {

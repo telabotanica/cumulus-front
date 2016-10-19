@@ -33,6 +33,16 @@ ol.breadcrumb {
     margin-bottom: 0;
 }
 
+add-file-button {
+    display: inline-block;
+}
+
+#add-file-button {
+    background: none;
+    border: none;
+    outline: none;
+}
+
 #files-explorer {
     flex: 1;
     display: flex;

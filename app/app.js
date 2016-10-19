@@ -30,30 +30,33 @@
   //   };
   // })
 
-  // .directive('addFileButton', ['config', function(config) {
-  //   var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
+  // // true machin tooltip
+  // $(this).tooltip('show')" data-placement="left" title="{{ fiche.infos_taxon.nom_sci_complet }}"
 
-  //     $scope.$watch('files', function() {
-  //       FilesListService.uploadFiles($scope.files, function() {
-  //         var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
-  //           currentPath;
+  .directive('addFileButton', ['config', function(config) {
+    var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
 
-  //         currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-  //         $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
-  //         ngToast.create('File(s) uploaded');
-  //       });
-  //     });
-  //   };
+      $scope.$watch('files', function() {
+        FilesListService.uploadFiles($scope.files, function() {
+          var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
+            currentPath;
 
-  //   var path = config.ressourcesPath;
+          currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+          $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
+          ngToast.create('File(s) uploaded');
+        });
+      });
+    };
 
-  //   return {
-  //     restrict: 'E',
-  //     controller: AddFileButtonController,
-  //     controllerAs: 'addFileButtonCtrl',
-  //     templateUrl: path + 'breadcrumbs/breadcrumbs.html'
-  //   }
-  // }])
+    var path = config.ressourcesPath;
+
+    return {
+      restrict: 'E',
+      controller: AddFileButtonController,
+      controllerAs: 'addFileButtonCtrl',
+      templateUrl: path + 'breadcrumbs/add-file-button.html'
+    }
+  }])
 
   .directive('fileLicense', ['config', function(config) {
     var FileLicenseController = function($scope) {
@@ -105,7 +108,7 @@
   .factory('sessionRecoverer', ['$q', '$injector', function($q, $injector) {
     var sessionRecoverer = {
       responseError: function(response) {
-        if (response.status == 400) {
+        if (response.status == 400 && angular.isDefined(response.error) && response.data.error.lastIndexOf('invalid', 0) === 0) {
           var deferred = $q.defer();
           var $http = $injector.get('$http');
           var authService = $injector.get('authService');
@@ -120,7 +123,7 @@
           // If session is retored, we play the previous request again
           return deferred.promise.then(function() {
             return $http(response.config);
-          })
+          });
         }
 
         return $q.reject(response);
@@ -216,8 +219,7 @@
      * @return     {promise}  The request promise
      */
     function refreshToken() {
-      console.log(config.tokenUrl);
-      return $http.get(config.tokenUrl, { withCredentials: true });
+      return $http.get(config.authUrl + '/identite', { withCredentials: true });
     }
 
     function setCredentials(auth) {
