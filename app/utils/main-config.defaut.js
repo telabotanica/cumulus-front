@@ -9,12 +9,12 @@
   .constant('config', (function() {
     var config = {
       ver: '0.1',
-      filesServiceUrl: 'http://files.cumulus.dev',
-      userInfoByIdUrl: 'http://annuaire.dev/service:annuaire:utilisateur/infosParIds',
-      abstractionPath: '/mon',
+      filesServiceUrl: 'http://api.tela-botanica.org/cumulus',
+      userInfoByIdUrl: 'https://www.tela-botanica.org/service:annuaire:utilisateur/infosParIds',
+      abstractionPath: '/dossier',
       ressourcesPath: '', // in including mode, represents the path of application root path
       group: null,
-      authUrl: 'https://annuaire.dev/service:annuaire:auth'
+      authUrl: 'https://www.tela-botanica.org/service:annuaire:auth'
     };
 
     config = angular.merge(config, heritedConf);

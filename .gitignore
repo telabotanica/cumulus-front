@@ -3,6 +3,7 @@ logs/*
 node_modules/
 bower_components/
 tmp
+/app/utils/main-config.js
 .DS_Store
 .idea
 /nbproject/
