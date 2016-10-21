@@ -5,18 +5,18 @@
 
   <separator></separator>
 
-  <details-pane-data datasource="detailsPaneCtrl.details.size | formatByte" dataname="'Size'"></details-pane-data>
-  <!-- <details-pane-data datasource="detailsPaneCtrl.details.path" dataname="'Location'"></details-pane-data> -->
-  <details-pane-data datasource="detailsPaneCtrl.details.creation_date" dataname="'Created'"></details-pane-data>
-  <details-pane-data datasource="detailsPaneCtrl.details.last_modification_date" dataname="'Modified'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.size | formatByte" dataname="'Taille'"></details-pane-data>
+  <!-- <details-pane-data datasource="detailsPaneCtrl.details.path" dataname="'Emplacement'"></details-pane-data> -->
+  <details-pane-data datasource="detailsPaneCtrl.details.creation_date" dataname="'Créé le'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.last_modification_date" dataname="'Dernière modification'"></details-pane-data>
   <br>
-  <details-pane-data datasource="detailsPaneCtrl.details.owner" dataname="'Owner'"></details-pane-data>
-  <details-pane-data datasource="detailsPaneCtrl.details.license" dataname="'License'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.owner" dataname="'Propriétaire'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.license" dataname="'Licence'"></details-pane-data>
   <details-pane-data datasource="detailsPaneCtrl.details.permissions" dataname="'Permissions'"></details-pane-data>
 
   <separator></separator>
 
-  <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-pencil"></span> Add description</button>
+  <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-pencil"></span> Ajouter une description</button>
 </div>
 
 <div ng-if="detailsPaneCtrl.details.name && !detailsPaneCtrl.details.size">
@@ -28,7 +28,7 @@
 </div>
 
 <div ng-if="!detailsPaneCtrl.details.name">
-  <h3><span class="{{ 'default-icon' | mimetypeIcon }}"></span> Select a file or a folder</h3>
+  <h3><span class="{{ 'default-icon' | mimetypeIcon }}"></span> Sélectionner un fichier ou un dossier</h3>
 
   <separator></separator>
 </div>

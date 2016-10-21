@@ -8,7 +8,7 @@
     <div id="right-tools" ng-class="{ width100: nbSearchResults }">
       <div id="nb-search-results" class="flex1 padding8" class="padding8"
         ng-if="nbSearchResults">
-        Results: {{ nbSearchResults }}
+        Résultats: {{ nbSearchResults }}
       </div>
       <filesearch></filesearch>
       <button class="btn btn-default" type="button"
@@ -38,19 +38,19 @@
           <thead>
             <tr>
               <td>
-                <sort-head displayed-name="'Name'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                <sort-head displayed-name="'Nom'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
               <td>
-                <sort-head displayed-name="'Owner'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                <sort-head displayed-name="'Propriétaire'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
               <td>
-                <sort-head displayed-name="'Modified'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                <sort-head displayed-name="'Dernière modification'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
               <td>
-                <sort-head displayed-name="'File size'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                <sort-head displayed-name="'Taille'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
               <td>
-                <sort-head displayed-name="'License'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                <sort-head displayed-name="'Licence'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
               <td/>
             </tr>
@@ -69,7 +69,7 @@
                 <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                 <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                 <span id="new-folder-plus" class="glyphicon glyphicon-plus hide" aria-hidden="true"></span>
-                <b>New folder</b></td>
+                <b>Nouveau dossier</b></td>
               <td/>
               <td/>
               <td/>
@@ -132,7 +132,7 @@
         </table>
 
         <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
-          <h3>Nothing here</h3>
+          <h3>Il n'y a rien ici...</h3>
         </div>
 
       </div>

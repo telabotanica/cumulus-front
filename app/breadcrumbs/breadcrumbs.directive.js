@@ -14,7 +14,7 @@
       vm.refresh = function() {
         vm.crumbs = [];
         vm.crumbs.push({
-          'name': 'Root',
+          'name': 'Accueil',
           'path': config.abstractionPath
         });
         var path = breadcrumbsService.getCurrentPathCrumbs();

@@ -71,18 +71,18 @@
 
         switch (dropTarget[0]) {
           case 'new-folder-element':
-            console.log('target: newFolder');
+            //console.log('target: newFolder');
             vm.dropTarget = 'newFolder';
             break;
           case 'folder-element':
             // vm.dropTarget = dragEvent.target...
             // break;
           case 'file-element':
-            console.log('target: currentFolder');
+            //console.log('target: currentFolder');
             vm.dropTarget = 'currentFolder';
             break;
           default:
-            console.log('pouetlol gtrgtgtrdgfvjhdfi');
+            //console.log('pouetlol gtrgtgtrdgfvjhdfi');
             vm.dropTarget = '';
             break;
         }
@@ -91,7 +91,7 @@
       vm.drag = function(isDragging, dragClass, dragEvent) {
         vm.handleDragEvent(dragEvent);
 
-        console.log('vm.dropTarget:', vm.dropTarget);
+        //console.log('vm.dropTarget:', vm.dropTarget);
       };
 
       vm.resetDropContext = function(event) {

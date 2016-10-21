@@ -33,7 +33,7 @@
       <div id="right-tools" ng-class="{ width100: nbSearchResults }">
         <div id="nb-search-results" class="flex1 padding8" class="padding8"
           ng-if="nbSearchResults">
-          Results: {{ nbSearchResults }}
+          Résultats: {{ nbSearchResults }}
         </div>
         <filesearch></filesearch>
         <button class="btn btn-default" type="button"
@@ -69,19 +69,19 @@
               <thead>
                 <tr>
                   <td class="col-md-5 col-lg-5">
-                    <sort-head displayed-name="'Name'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                    <sort-head displayed-name="'Nom'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
                   </td>
                   <td class="col-md-2 col-lg-2">
-                    <sort-head displayed-name="'Owner'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                    <sort-head displayed-name="'Propriétaire'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
                   </td>
                   <td class="col-md-2 col-lg-2">
-                    <sort-head displayed-name="'Modified'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                    <sort-head displayed-name="'Dernière modification'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
                   </td>
                   <td class="col-md-1 col-lg-1">
-                    <sort-head displayed-name="'File size'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                    <sort-head displayed-name="'Taille'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
                   </td>
                   <td class="col-md-1 col-lg-1">
-                    <sort-head displayed-name="'License'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                    <sort-head displayed-name="'Licence'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
                   </td>
                   <td class="col-md-1 col-lg-1"/>
                 </tr>
@@ -100,7 +100,7 @@
                     <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                     <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                     <span id="new-folder-plus" class="glyphicon glyphicon-plus hide" aria-hidden="true"></span>
-                    <b>New folder</b></td>
+                    <b>Nouveau dossier</b></td>
                   <td/>
                   <td/>
                   <td/>
@@ -158,7 +158,7 @@
           <h1 ng-hide="addFilesCtrl.dropInNewFolder">-</h1>
           <h2 id="lolilol">-</h2>
             <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
-              <h3>Nothing here</h3>
+              <h3>Il n'y a rien ici...</h3>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@
 
   <div id="dropzone-modal" class="hide">
     <div id="dropzone-text">
-      <p>Drop files to upload them to:</p>
+      <p>Glisser-déposer des fichiers ici pour les envoyer vers:</p>
       <p id="dropzone-folder-name"><i class="glyphicon glyphicon-file white" aria-hidden="true"></i> folderName</p>
     </div>
   </div>
@@ -209,6 +209,7 @@
   <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
   <script src="bower_components/ng-contextmenu/dist/ng-contextmenu.js"></script>
   <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/moment/locale/fr.js"></script>
   <script src="bower_components/angular-moment/angular-moment.js"></script>
   <script src="bower_components/angular-modal-service/dst/angular-modal-service.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>

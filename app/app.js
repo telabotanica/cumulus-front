@@ -371,7 +371,7 @@
       var re = /.*\/(.*)\/\w+/;
       var result = re.exec(path);
       // console.log(result); // clueless debug stuf, yuno, to demonstrate filters multiple evaluations
-      return result ? result[1] : 'Root';
+      return result ? result[1] : 'Accueil';
     }
   })
 
@@ -396,7 +396,7 @@
 
       exp = Math.log(size) / Math.log(base) | 0;
       return (size / Math.pow(base, exp)).toFixed(1) + ' ' +
-        ((exp > 0) ? prefixes[exp - 1] + 'B' : 'Bytes');
+        ((exp > 0) ? prefixes[exp - 1] + 'B' : 'octets');
       };
   });
 })();
