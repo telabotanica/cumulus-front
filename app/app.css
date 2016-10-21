@@ -55,6 +55,10 @@ add-file-button {
     flex-direction: column;
 }
 
+#files-table tr {
+	cursor: default;
+}
+
 /* Details pane */
 
 #details-pane {
