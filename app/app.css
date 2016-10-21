@@ -65,7 +65,7 @@ add-file-button {
     border-left: 1px solid #ddd;
     padding: 8px;
     margin-left: 8px;
-    min-width: 0;
+    width: 18%;
 }
 
 #details-table > tr > td {
