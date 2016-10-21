@@ -3,13 +3,16 @@
 
   angular.module('cumulus.files')
 
-  .factory('FilesListService', function($rootScope, config, $http, Upload, breadcrumbsService, ngToast, authService) {
+  .factory('FilesListService', function($rootScope, config, $http, Upload, breadcrumbsService, ngToast, authService, $q) {
     var vm = this;
 
     vm.filesList = {
       'files': [],
       'folders': []
     };
+
+    vm.oldCanceller = $q.defer();
+    vm.toto = "coucou";
 
     var service = {
       getList: getList,
@@ -20,7 +23,6 @@
       deleteFile: deleteFile,
       renameFile: renameFile,
       getPathInfo: getPathInfo,
-      sortFiles: sortFiles,
       uploadFiles: uploadFiles,
       uploadFilesInFolder: uploadFilesInFolder
     };
@@ -144,7 +146,17 @@
     function fileSearch(query, updateFilesList) {
       if (query.length > 0) {
         var path = config.abstractionPath;
-        $http.get(config.filesServiceUrl + '/api/search/?path_recursive=true&path=' + path + '&name=' + query)
+        console.log('ça cherche à donf');
+        // one request at a time
+        vm.oldCanceller.resolve();
+        var canceller = $q.defer();
+
+        $http.get(
+          config.filesServiceUrl + '/api/search/?path_recursive=true&path=' + path + '&name=' + query,
+          {
+            timeout: canceller.promise
+          }
+        )
           .success(function(data) {
             updateFilesList({
               'files': data.results,
@@ -152,6 +164,9 @@
             });
           }
         );
+        // current request will be aborted next time if necessary
+        vm.oldCanceller = canceller;
+
       } else {
         updateFilesList({
           files: [],

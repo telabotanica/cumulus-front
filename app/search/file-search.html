@@ -8,6 +8,7 @@
     focus-me="fileSearchCtrl.isSearchOpen"
     ng-show="fileSearchCtrl.isSearchOpen"
     ng-change="fileSearchCtrl.search(fileSearchCtrl.searchQuery)"
+    ng-model-options=" { debounce : 200 } "
     ng-model="fileSearchCtrl.searchQuery">
   <span ng-show="fileSearchCtrl.isSearchOpen" ng-click="fileSearchCtrl.closeSearch()" class="glyphicon glyphicon-remove-circle"></span>
 </div>
