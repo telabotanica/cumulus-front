@@ -59,7 +59,12 @@
         ngf-allow-dir="true"
         ngf-drag="addFilesCtrl.drag($isDragging, $class, $event)">
 
-        <div id="files-list" ng-controller="FilesListController as filesListCtrl">
+        <div id="search-indicator" ng-show="fileSearchCtrl.isSearching">
+          <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>
+        </div>
+        <div id="files-list"
+          ng-controller="FilesListController as filesListCtrl"
+          ng-show="! fileSearchCtrl.isSearching">
           <table id="files-table" ng-show="filesListCtrl.filesList.files.length !== 0 || filesListCtrl.filesList.folders.length !== 0" class="table table-hover">
             <thead>
               <tr>

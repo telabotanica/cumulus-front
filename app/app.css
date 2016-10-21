@@ -300,3 +300,30 @@ add-file-button {
 body.modal-open {
     padding-right: 0px !important;
 }
+
+/* search indicator */
+#search-indicator {
+	margin-left: 20px;
+	margin-top: 10px;
+	font-size: 2em;
+	display: none;
+}
+
+#search-indicator i.glyphicon {
+	color: #98AACB;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}

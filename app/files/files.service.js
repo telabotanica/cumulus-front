@@ -12,7 +12,7 @@
     };
 
     vm.oldCanceller = $q.defer();
-    vm.toto = "coucou";
+    vm.isSearching = false;
 
     var service = {
       getList: getList,
@@ -146,7 +146,8 @@
     function fileSearch(query, updateFilesList) {
       if (query.length > 0) {
         var path = config.abstractionPath;
-        console.log('ça cherche à donf');
+
+        vm.isSearching = true;
         // one request at a time
         vm.oldCanceller.resolve();
         var canceller = $q.defer();
@@ -162,6 +163,10 @@
               'files': data.results,
               'folders': []
             });
+            vm.isSearching = false;
+          },
+          function () {
+            vm.isSearching = false;
           }
         );
         // current request will be aborted next time if necessary
