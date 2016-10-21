@@ -59,83 +59,88 @@
         ngf-allow-dir="true"
         ngf-drag="addFilesCtrl.drag($isDragging, $class, $event)">
 
-        <div id="files-list" ng-controller="FilesListController as filesListCtrl">
-          <table id="files-table" ng-show="filesListCtrl.filesList.files.length !== 0 || filesListCtrl.filesList.folders.length !== 0" class="table table-hover">
-            <thead>
-              <tr>
-                <td class="col-md-5 col-lg-5">
-                  <sort-head displayed-name="'Name'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
-                </td>
-                <td class="col-md-2 col-lg-2">
-                  <sort-head displayed-name="'Owner'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
-                </td>
-                <td class="col-md-2 col-lg-2">
-                  <sort-head displayed-name="'Modified'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
-                </td>
-                <td class="col-md-1 col-lg-1">
-                  <sort-head displayed-name="'File size'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
-                </td>
-                <td class="col-md-1 col-lg-1">
-                  <sort-head displayed-name="'License'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
-                </td>
-                <td class="col-md-1 col-lg-1"/>
-              </tr>
-            </thead>
-            <tbody>
-              <tr id="dropzone-new-folder" class="hide"
-                ng-model="filesNewFolder"
-                name="fileUploadInNewFolder"
-                ngf-drop
-                ngf-drag-over-class="'dragover'"
-                ngf-multiple="true"
-                ngf-allow-dir="true"
-                ngf-drag="addFilesCtrl.dragNewFolder($isDragging, $class, $event)"
-                ng-mouseenter="hover=true" ng-mouseleave="hover=false">
-                <td>
-                  <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
-                  <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                  <span id="new-folder-plus" class="glyphicon glyphicon-plus hide" aria-hidden="true"></span>
-                  <b>New folder</b></td>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
-              </tr>
-              <!-- Folders list -->
-              <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
-                <td>
-                  <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
-                  <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
-                  {{ folder.name }}
-                </td>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
-                <td/>
-              </tr>
-              <!-- Files list -->
-              <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0"
-                ng-repeat="file in filesListCtrl.filesList.files"
-                data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html"
-                ng-model="file"
-                ng-click="filesListCtrl.showDetails(file)">
-                <td>
-                  <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
-                </td>
-                <td>{{ file.owner }}</td>
-                <!-- <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td> -->
-                <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
-                  <span am-time-ago="file.last_modification_date"></span>
-                  <!-- <span am-time-ago="file.last_modification_date" am-full-date-threshold="7" fullDateFormat="d MMM yyyy"></span> -->
-                </td>
-                <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
-              <td><file-license license="{{ file.license }}"></file-license></td>
-                <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
-              </tr>
-              <!-- Search results files list -->
-              <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html" ng-model="file" ng-click="showDetails(file)">
+        <div id="files-list-parent" ng-controller="FilesListController as filesListCtrl">
+          <div id="search-indicator" ng-show="filesListCtrl.isSearching">
+            <i class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></i>
+          </div>
+          <div id="files-list"
+            ng-show="! filesListCtrl.isSearching">
+            <table id="files-table" ng-show="filesListCtrl.filesList.files.length !== 0 || filesListCtrl.filesList.folders.length !== 0" class="table table-hover">
+              <thead>
+                <tr>
+                  <td class="col-md-5 col-lg-5">
+                    <sort-head displayed-name="'Name'" column="'name'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                  </td>
+                  <td class="col-md-2 col-lg-2">
+                    <sort-head displayed-name="'Owner'" column="'owner'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                  </td>
+                  <td class="col-md-2 col-lg-2">
+                    <sort-head displayed-name="'Modified'" column="'last_modification_date'" type="'date'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                  </td>
+                  <td class="col-md-1 col-lg-1">
+                    <sort-head displayed-name="'File size'" column="'size'" type="'number'" direction="'desc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                  </td>
+                  <td class="col-md-1 col-lg-1">
+                    <sort-head displayed-name="'License'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
+                  </td>
+                  <td class="col-md-1 col-lg-1"/>
+                </tr>
+              </thead>
+              <tbody>
+                <tr id="dropzone-new-folder" class="hide"
+                  ng-model="filesNewFolder"
+                  name="fileUploadInNewFolder"
+                  ngf-drop
+                  ngf-drag-over-class="'dragover'"
+                  ngf-multiple="true"
+                  ngf-allow-dir="true"
+                  ngf-drag="addFilesCtrl.dragNewFolder($isDragging, $class, $event)"
+                  ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+                  <td>
+                    <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+                    <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                    <span id="new-folder-plus" class="glyphicon glyphicon-plus hide" aria-hidden="true"></span>
+                    <b>New folder</b></td>
+                  <td/>
+                  <td/>
+                  <td/>
+                  <td/>
+                  <td/>
+                </tr>
+                <!-- Folders list -->
+                <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+                  <td>
+                    <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+                    <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+                    {{ folder.name }}
+                  </td>
+                  <td/>
+                  <td/>
+                  <td/>
+                  <td/>
+                  <td/>
+                </tr>
+                <!-- Files list -->
+                <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0"
+                  ng-repeat="file in filesListCtrl.filesList.files"
+                  data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html"
+                  ng-model="file"
+                  ng-click="filesListCtrl.showDetails(file)">
+                  <td>
+                    <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
+                  </td>
+                  <td>{{ file.owner }}</td>
+                  <!-- <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td> -->
+                  <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
+                    <span am-time-ago="file.last_modification_date"></span>
+                    <!-- <span am-time-ago="file.last_modification_date" am-full-date-threshold="7" fullDateFormat="d MMM yyyy"></span> -->
+                  </td>
+                  <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
+                  <td><file-license license="{{ file.license }}"></file-license></td>
+                  <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
+                </tr>
+                <!-- Search results files list -->
+                <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html" ng-model="file" ng-click="showDetails(file)">
                 <td>
                   <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
                   <span ng-click="filesListCtrl.openAbsoluteFolder(file.path); filesListCtrl.closeSearch()" class="discret"> (<file-path path="{{ file.path }}"></file-path>)</span>
@@ -150,13 +155,12 @@
               </tr>
             </tbody>
           </table>
-        <h1 ng-hide="addFilesCtrl.dropInNewFolder">-</h1>
-        <h2 id="lolilol">-</h2>
-
-          <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
-            <h3>Nothing here</h3>
+          <h1 ng-hide="addFilesCtrl.dropInNewFolder">-</h1>
+          <h2 id="lolilol">-</h2>
+            <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
+              <h3>Nothing here</h3>
+            </div>
           </div>
-
         </div>
       </div>
 

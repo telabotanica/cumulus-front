@@ -16,6 +16,9 @@
       vm.filesList = [];
       vm.searchResultsFilesList = [];
 
+      // search indicator
+      vm.isSearching = false;
+
       vm.showDetails = showDetails;
       vm.fileIcon = fileIcon;
       vm.openFolder = openFolder;
@@ -88,10 +91,13 @@
       }
 
       $rootScope.$on('fileSearch', function(event, query) {
+        vm.isSearching = true;
         FilesListService.fileSearch(query, function(data) {
           vm.searchResultsFilesList = data;
-
           $rootScope.nbSearchResults = data.files.length;
+          vm.isSearching = false;
+        }, function(error) {
+          vm.isSearching = false;
         });
       });
 

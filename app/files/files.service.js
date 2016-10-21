@@ -12,7 +12,6 @@
     };
 
     vm.oldCanceller = $q.defer();
-    vm.toto = "coucou";
 
     var service = {
       getList: getList,
@@ -143,10 +142,10 @@
      * @param  {String} query Array of searched terms
      * @return {[type]}
      */
-    function fileSearch(query, updateFilesList) {
+    function fileSearch(query, updateFilesList, error) {
       if (query.length > 0) {
         var path = config.abstractionPath;
-        console.log('ça cherche à donf');
+
         // one request at a time
         vm.oldCanceller.resolve();
         var canceller = $q.defer();
@@ -162,7 +161,8 @@
               'files': data.results,
               'folders': []
             });
-          }
+          },
+          error // controller error callback
         );
         // current request will be aborted next time if necessary
         vm.oldCanceller = canceller;
