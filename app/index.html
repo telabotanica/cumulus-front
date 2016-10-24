@@ -41,7 +41,7 @@
           ng-class="{ active: isDetailsPaneOpened }">
           <span class="padding8 glyphicon glyphicon-eye-open" aria-hidden="true"></span>
         </button>
-        <button class="btn btn-default" type="button">
+        <button class="btn btn-default" type="button" disabled>
           <span class="padding8 glyphicon glyphicon-cog" aria-hidden="true"></span>
         </button>
       </div>
@@ -155,8 +155,7 @@
               </tr>
             </tbody>
           </table>
-          <h1 ng-hide="addFilesCtrl.dropInNewFolder">-</h1>
-          <h2 id="lolilol">-</h2>
+          <h1 ng-hide="addFilesCtrl.dropInNewFolder"></h1>
             <div ng-if="filesListCtrl.filesList.files.length === 0 && filesListCtrl.filesList.folders.length === 0">
               <h3>Il n'y a rien ici...</h3>
             </div>
