@@ -46,9 +46,9 @@
 
               modal.element.modal('hide');
 
-              $('#dropzone').removeClass('dragover');
-              $('#dropzone-modal').addClass('hide');
-              $('#dropzone-new-folder').addClass('hide');
+              angular.element(document.getElementById('#dropzone')).removeClass('dragover');
+              angular.element(document.getElementById('#dropzone-modal')).addClass('hide');
+              angular.element(document.getElementById('#dropzone-new-folder')).addClass('hide');
             });
           });
         } else {
@@ -59,9 +59,10 @@
             currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
             $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
             ngToast.create('File(s) uploaded');
-            $('#dropzone').removeClass('dragover');
-            $('#dropzone-modal').addClass('hide');
-            $('#dropzone-new-folder').addClass('hide');
+            modal.element.modal('hide');
+            angular.element(document.getElementById('#dropzone')).removeClass('dragover');
+            angular.element(document.getElementById('#dropzone-modal')).addClass('hide');
+            angular.element(document.getElementById('#dropzone-new-folder')).addClass('hide');
           });
         }
       });

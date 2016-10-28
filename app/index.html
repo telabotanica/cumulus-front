@@ -108,7 +108,12 @@
                   <td></td>
                 </tr>
                 <!-- Folders list -->
-                <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+                <tr ng-if="filesListCtrl.searchResultsFilesList.length == 0"
+                  ng-repeat="folder in filesListCtrl.filesList.folders"
+                  ng-dblclick="filesListCtrl.openFolder(folder.name)"
+                  ng-click="filesListCtrl.showDetails(folder)"
+                  ng-mouseenter="hover=true"
+                  ng-mouseleave="hover=false">
                   <td>
                     <span ng-hide="hover" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
                     <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
@@ -140,7 +145,10 @@
                   <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
                 </tr>
                 <!-- Search results files list -->
-                <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files" data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html" ng-model="file" ng-click="showDetails(file)">
+                <tr ng-repeat="file in filesListCtrl.searchResultsFilesList.files"
+                  data-context-menu="{{ filesListCtrl.contextMenuPrefix }}file-menu.html"
+                  ng-model="file"
+                  ng-click="showDetails(file)">
                 <td>
                   <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
                   <span ng-click="filesListCtrl.openAbsoluteFolder(file.path); filesListCtrl.closeSearch()" class="discret"> (<file-path path="{{ file.path }}"></file-path>)</span>

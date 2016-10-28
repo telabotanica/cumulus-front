@@ -141,23 +141,30 @@
           controllerAs: 'uploadModalCtrl',
           inputs: {
             $rootScope: $rootScope
-          },
-          appendElement: angular.element(document.getElementById('modal'))
+          }
+          // ,
+          // appendElement: angular.element(document.getElementById('modal'))
         }).then(function(modal) {
           modal.element.modal();
 
           modal.close.then(function(userResponse) {
             console.log('userResponse', userResponse);
-            if ('abort' == userResponse) {
+            if (userResponse && 'abort' == userResponse) {
               // emit abort signal
               $rootScope.$broadcast('uploadEvent:abort');
             }
 
-            // @todo do that at the right place and angular way
-            $('#dropzone').removeClass('dragover');
-            $('#dropzone-modal').addClass('hide');
-            $('#dropzone-new-folder').addClass('hide');
+            // close the modal and modal stuff
+            modal.element.modal('hide');
+            // @todo fix this dirty modal backdrop closing
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
           });
+        }).finally(function() {
+            // @todo do that at the right place
+          angular.element(document.getElementById('#dropzone')).removeClass('dragover');
+          angular.element(document.getElementById('#dropzone-modal')).addClass('hide');
+          angular.element(document.getElementById('#dropzone-new-folder')).addClass('hide');
         });
       });
 

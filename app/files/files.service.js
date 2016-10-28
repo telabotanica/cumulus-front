@@ -45,18 +45,21 @@
     function _getUserInfo(userIds) {
       userIds = userIds.filter(function(n) { return n != null });
 
-      var userInfo = {};
-      return $http.get(config.userInfoByIdUrl + '/' + userIds.join(',')).then(function(response) {
-        // service response format is not consistent
-        // has to index info if only one id is asked
-        if (userIds.length == 1) {
-          userInfo[response.data.id] = response.data;
-        } else {
-          userInfo = response.data;
-        }
+      if (userIds.join(',')) {
+        var userInfo = {};
 
-        return userInfo;
-      });
+        return $http.get(config.userInfoByIdUrl + '/' + userIds.join(',')).then(function(response) {
+          // service response format is not consistent
+          // has to index info if only one id is asked
+          if (userIds.length == 1) {
+            userInfo[response.data.id] = response.data;
+          } else {
+            userInfo = response.data;
+          }
+
+          return userInfo;
+        });
+      }
     }
 
     /**
@@ -78,7 +81,7 @@
 
       return _getUserInfo(owners).then(function(info) {
         files.map(function(file) {
-          if (info.hasOwnProperty(file.owner)) {
+          if (info && info.hasOwnProperty(file.owner)) {
             var ownerInfo = info[file.owner];
 
             if ('' != ownerInfo.intitule) {

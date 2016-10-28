@@ -4,11 +4,17 @@
     ng-click="fileSearchCtrl.isSearchOpen = !fileSearchCtrl.isSearchOpen">
     <span class="padding8 glyphicon glyphicon-search"></span>
   </button>
-  <input type="text" id="file-search-input"
+
+  <input type="text" id="file-search-input" class="height36"
     focus-me="fileSearchCtrl.isSearchOpen"
     ng-show="fileSearchCtrl.isSearchOpen"
     ng-change="fileSearchCtrl.search(fileSearchCtrl.searchQuery)"
     ng-model-options=" { debounce : 200 } "
     ng-model="fileSearchCtrl.searchQuery">
-  <span ng-show="fileSearchCtrl.isSearchOpen" ng-click="fileSearchCtrl.closeSearch()" class="glyphicon glyphicon-remove-circle"></span>
+
+  <button class="btn btn-default" type="button"
+    ng-show="fileSearchCtrl.isSearchOpen"
+    ng-click="fileSearchCtrl.closeSearch()">
+    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+  </button>
 </div>

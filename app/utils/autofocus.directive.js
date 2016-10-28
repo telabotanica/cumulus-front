@@ -26,7 +26,7 @@
         scope.$watch(model, function(value) {
           if (value === true) {
             $timeout(function() {
-              $(element[0]).focus(); // @todo: remove $ and do it angular way
+              angular.element(element[0]).focus(); // @todo: remove $ and do it angular way
             });
           }
         });

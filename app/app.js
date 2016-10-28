@@ -33,30 +33,30 @@
   // // true machin tooltip
   // $(this).tooltip('show')" data-placement="left" title="{{ fiche.infos_taxon.nom_sci_complet }}"
 
-  .directive('addFileButton', ['config', function(config) {
-    var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
+  // .directive('addFileButton', ['config', function(config) {
+  //   var AddFileButtonController = function(FilesListService, breadcrumbsService, $scope, $rootScope, ngToast) {
 
-      $scope.$watch('files', function() {
-        FilesListService.uploadFiles($scope.files, function() {
-          var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
-            currentPath;
+  //     $scope.$watch('files', function() {
+  //       FilesListService.uploadFiles($scope.files, function() {
+  //         var crumbsArray = breadcrumbsService.getCurrentPathCrumbs(),
+  //           currentPath;
 
-          currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
-          $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
-          ngToast.create('File(s) uploaded');
-        });
-      });
-    };
+  //         currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
+  //         $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
+  //         ngToast.create('File(s) uploaded');
+  //       });
+  //     });
+  //   };
 
-    var path = config.ressourcesPath;
+  //   var path = config.ressourcesPath;
 
-    return {
-      restrict: 'E',
-      controller: AddFileButtonController,
-      controllerAs: 'addFileButtonCtrl',
-      templateUrl: path + 'breadcrumbs/add-file-button.html'
-    }
-  }])
+  //   return {
+  //     restrict: 'E',
+  //     controller: AddFileButtonController,
+  //     controllerAs: 'addFileButtonCtrl',
+  //     templateUrl: path + 'breadcrumbs/add-file-button.html'
+  //   }
+  // }])
 
   .directive('fileLicense', ['config', function(config) {
     var FileLicenseController = function($scope) {
@@ -397,6 +397,6 @@
       exp = Math.log(size) / Math.log(base) | 0;
       return (size / Math.pow(base, exp)).toFixed(1) + ' ' +
         ((exp > 0) ? prefixes[exp - 1] + 'B' : 'octets');
-      };
+    };
   });
 })();

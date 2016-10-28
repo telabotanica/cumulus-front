@@ -13,9 +13,9 @@
     "ng-file-upload": "~12.x.x",
     "ng-file-upload-shim": "~12.x.x",
     "bootstrap": "~3.3.x",
-    "ng-contextmenu": "~0.4.x",
+    "ng-contextmenu": "~0.7.x",
     "angular-moment": "~0.10.x",
-    "angular-modal-service": "~0.6.x",
+    "angular-modal-service": "~0.10.x",
     "ngtoast": "~1.5.x",
     "richardba/cc-icons": "*"
   },
