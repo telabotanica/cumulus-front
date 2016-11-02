@@ -59,6 +59,8 @@
 
           return userInfo;
         });
+      } else {
+        return $q.when({});
       }
     }
 
@@ -146,7 +148,7 @@
      * @return {[type]}
      */
     function fileSearch(query, updateFilesList, error) {
-      if (query.length > 0) {
+      if (query && query.length > 2) {
         var path = config.abstractionPath;
 
         // one request at a time
@@ -172,7 +174,7 @@
 
       } else {
         updateFilesList({
-          files: [],
+          'files': [],
           'folders': []
         });
       }
