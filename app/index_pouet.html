@@ -52,7 +52,7 @@
               <td>
                 <sort-head displayed-name="'Licence'" column="'license'" type="'text'" direction="'asc'" sorting-function="sortFiles(column, type, direction)"></sort-head>
               </td>
-              <td/>
+              <td></td>
             </tr>
           </thead>
           <tbody>
@@ -70,11 +70,11 @@
                 <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                 <span id="new-folder-plus" class="glyphicon glyphicon-plus hide" aria-hidden="true"></span>
                 <b>Nouveau dossier</b></td>
-              <td/>
-              <td/>
-              <td/>
-              <td/>
-              <td/>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
 
             <!-- Folders list -->
@@ -84,11 +84,11 @@
                 <span ng-show="hover" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
                 {{ folder.name }}
               </td>
-              <td/>
-              <td/>
-              <td/>
-              <td/>
-              <td/>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
 
             <!-- Files list -->
@@ -106,7 +106,7 @@
                 <span am-time-ago="file.last_modification_date"></span>
                 <!-- <span am-time-ago="file.last_modification_date" am-full-date-threshold="7" fullDateFormat="d MMM yyyy"></span> -->
               </td>
-              <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
+              <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"></td>
               <td><file-license license="{{ file.license }}"></file-license></td>
               <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
             </tr>
@@ -124,7 +124,7 @@
               <td data-toggle="tooltip" data-placement="top" title="{{ file.last_modification_date | date : 'd MMM yyyy' }}">
                 <span am-time-ago="file.last_modification_date"></span>
               </td>
-              <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"/>
+              <td ng-if="file.size != null">{{ file.size | formatByte }}</td><td ng-if="file.size == null"></td>
               <td><file-license license="{{ file.license }}"></file-license></td>
               <td><a href="{{ filesListCtrl.downloadUrl() + file.name }}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></td>
             </tr>
