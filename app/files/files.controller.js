@@ -153,13 +153,6 @@
               // emit abort signal
               $rootScope.$broadcast('uploadEvent:abort');
             }
-            var modalBackdrops = document.getElementsByClassName('modal-backdrop');
-            Array.prototype.forEach.call(modalBackdrops, function(modalBackdrop) {
-                modalBackdrop.parentNode.removeChild(modalBackdrop);
-    
-            });
-            document.getElementById('dropzone').classList.remove("dragover");
-            document.getElementById('dropzone-new-folder').classList.add("hide");
           });
         }).finally(function() {
             // @todo do that at the right place
