@@ -153,12 +153,13 @@
               // emit abort signal
               $rootScope.$broadcast('uploadEvent:abort');
             }
-
-            // close the modal and modal stuff
-            modal.element.modal('hide');
-            // @todo fix this dirty modal backdrop closing
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
+            var modalBackdrops = document.getElementsByClassName('modal-backdrop');
+            Array.prototype.forEach.call(modalBackdrops, function(modalBackdrop) {
+                modalBackdrop.parentNode.removeChild(modalBackdrop);
+    
+            });
+            document.getElementById('dropzone').classList.remove("dragover");
+            document.getElementById('dropzone-new-folder').classList.add("hide");
           });
         }).finally(function() {
             // @todo do that at the right place
