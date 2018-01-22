@@ -335,3 +335,12 @@ body.modal-open {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}
 }
+
+.ng-toast {
+  z-index: 100000;
+}
+
+.modal {
+  z-index: 100000;
+}
+
