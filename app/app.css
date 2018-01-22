@@ -336,11 +336,26 @@ body.modal-open {
     to { -webkit-transform: rotate(360deg);}
 }
 
+/* search form */
+
+#file-search-input {
+  float: left;
+  width: 200px;
+}
+
+.float-none {
+  float: none;
+}
+
+/* notification messages */
+
 .ng-toast {
   z-index: 100000;
 }
 
-.modal {
+.modal-dialog {
   z-index: 100000;
 }
+
+
 
