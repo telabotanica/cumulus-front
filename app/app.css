@@ -17,6 +17,9 @@ thead {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    font-family: Muli,sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
 }
 
 #main-title {
@@ -247,7 +250,7 @@ add-file-button {
 
 .glyphicon {
     margin-right: 8px;
-    color: cornflowerblue;
+    color: #918a6f;
 }
 
 .glyphicon.white {
