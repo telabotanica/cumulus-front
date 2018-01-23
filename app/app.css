@@ -5,6 +5,7 @@
 
 html, body {
     height: 100%;
+    font-family: Muli,sans-serif;
 }
 
 thead {
@@ -117,14 +118,19 @@ add-file-button {
     cursor: pointer;
 }
 
+
+.glyphicon:hover {
+   color:#aaa388;
+}
+
 #right-tools .btn-default {
     background: none;
-    border: 1px solid #918a6f;
+    border: 1px solid #f5f5f5;
     padding: 0 3px;
 }
 
 #right-tools .btn-default:hover {
-    border: 1px solid #918a6f;
+    border: 1px solid #ddd;
     padding: 0 3px;
 }
 
@@ -139,11 +145,11 @@ add-file-button {
 }
 
 #right-tools .btn-default:hover > .glyphicon {
-    color: #918a6f;
+    color: #aaa388;
 }
 
 #right-tools .btn-default:active > .glyphicon {
-    color: #918a6f;
+    color: #aaa388;
 }
 
 #file-menu {
@@ -181,12 +187,12 @@ add-file-button {
 
 #dropzone-text {
     display: inline-block;
-    background: #918a6f;
+    background: #98AACB;
     padding: 16px;
     bottom: 0;
     color: white;
     margin: 0 auto 8px;
-    border: solid 4px #918a6f;
+    border: solid 4px #98AACB;
     border-radius: 4px;
 }
 
@@ -204,7 +210,7 @@ add-file-button {
 
 #dropzone.dragover #files-list tbody,
 #dropzone-new-folder.dragover {
-    border: 3px dashed #918a6f;
+    border: 3px dashed #aaa388;
 }
 
 #dropzone.dragover tr {
@@ -266,7 +272,7 @@ add-file-button {
 }
 
 .discret {
-    color: #918a6f;
+    color: #565656;
     font-size: 11px;
     cursor: pointer;
 }
@@ -321,7 +327,7 @@ body.modal-open {
 }
 
 #search-indicator i.glyphicon {
-	color: #918a6f;
+	color: #98AACB;
 }
 
 .glyphicon-refresh-animate {
@@ -344,7 +350,15 @@ body.modal-open {
 #file-search-input {
   float: left;
   width: 200px;
+  border-color: #918a6f;
 }
+
+#file-search-input:focus {
+  border-color: #aaa388;
+    	-webkit-box-shadow: none;
+    	outline: -webkit-focus-ring-color auto 0px;
+}
+
 
 .float-none {
   float: none;
@@ -359,27 +373,4 @@ body.modal-open {
 .modal-dialog {
   z-index: 100000;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
-    color: #f00;
-    background-color: #00b3db;
-    border-color: #285e8e; /*set the color you want here*/
-}
-
-
 
