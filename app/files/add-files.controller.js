@@ -58,11 +58,14 @@
 
             currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
             $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
-            ngToast.create('File(s) uploaded');
-            modal.element.modal('hide');
-            angular.element(document.getElementById('#dropzone')).removeClass('dragover');
-            angular.element(document.getElementById('#dropzone-modal')).addClass('hide');
-            angular.element(document.getElementById('#dropzone-new-folder')).addClass('hide');
+            ngToast.create('Fichiers uploadés');
+            var modalBackdrops = document.getElementsByClassName('modal-backdrop');
+            Array.prototype.forEach.call(modalBackdrops, function(modalBackdrop) {
+                modalBackdrop.parentNode.removeChild(modalBackdrop);
+    
+            });
+            document.getElementById('dropzone').classList.remove("dragover");
+            document.getElementById('dropzone-new-folder').classList.add("hide");
           });
         }
       });

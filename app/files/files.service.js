@@ -454,6 +454,7 @@
                 // current file upload successful, hurray!
                 file.upload = { status: 'success' };
                 successCount++;
+                onSuccess();
               })
 
               .error(function(data, status, headers, config) {

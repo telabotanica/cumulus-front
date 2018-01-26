@@ -5,6 +5,7 @@
 
 html, body {
     height: 100%;
+    font-family: Muli,sans-serif;
 }
 
 thead {
@@ -17,6 +18,9 @@ thead {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    font-family: Muli,sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
 }
 
 #main-title {
@@ -114,6 +118,11 @@ add-file-button {
     cursor: pointer;
 }
 
+
+.glyphicon:hover {
+   color:#aaa388;
+}
+
 #right-tools .btn-default {
     background: none;
     border: 1px solid #f5f5f5;
@@ -136,11 +145,11 @@ add-file-button {
 }
 
 #right-tools .btn-default:hover > .glyphicon {
-    color: #38d;
+    color: #aaa388;
 }
 
 #right-tools .btn-default:active > .glyphicon {
-    color: #38d;
+    color: #aaa388;
 }
 
 #file-menu {
@@ -178,12 +187,12 @@ add-file-button {
 
 #dropzone-text {
     display: inline-block;
-    background: #38d;
+    background: #98AACB;
     padding: 16px;
     bottom: 0;
     color: white;
     margin: 0 auto 8px;
-    border: solid 4px #38d;
+    border: solid 4px #98AACB;
     border-radius: 4px;
 }
 
@@ -201,7 +210,7 @@ add-file-button {
 
 #dropzone.dragover #files-list tbody,
 #dropzone-new-folder.dragover {
-    border: 3px dashed #38d;
+    border: 3px dashed #aaa388;
 }
 
 #dropzone.dragover tr {
@@ -247,7 +256,7 @@ add-file-button {
 
 .glyphicon {
     margin-right: 8px;
-    color: cornflowerblue;
+    color: #918a6f;
 }
 
 .glyphicon.white {
@@ -335,3 +344,33 @@ body.modal-open {
     from { -webkit-transform: rotate(0deg);}
     to { -webkit-transform: rotate(360deg);}
 }
+
+/* search form */
+
+#file-search-input {
+  float: left;
+  width: 200px;
+  border-color: #918a6f;
+}
+
+#file-search-input:focus {
+  border-color: #aaa388;
+    	-webkit-box-shadow: none;
+    	outline: -webkit-focus-ring-color auto 0px;
+}
+
+
+.float-none {
+  float: none;
+}
+
+/* notification messages */
+
+.ng-toast {
+  z-index: 100000;
+}
+
+.modal-dialog {
+  z-index: 100000;
+}
+
