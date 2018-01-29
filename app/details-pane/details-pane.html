@@ -1,4 +1,5 @@
-<div ng-if="detailsPaneCtrl.details.name && detailsPaneCtrl.details.size">
+<div ng-if="detailsPaneCtrl.details.name && detailsPaneCtrl.details.size"
+ ng-controller="ContextMenuController as ctxMenulCtrl">
   <h3 class="flex">
     <span class="{{ detailsPaneCtrl.details.mimetype | mimetypeIcon }}"></span> <span class="file-name ellipsis-content">{{ detailsPaneCtrl.details.name }}</span>
   </h3>
@@ -16,7 +17,8 @@
 
   <separator></separator>
 
-  <button class="btn btn-default" type="button" disabled><span class="glyphicon glyphicon-pencil"></span> Ajouter une description</button>
+  <button class="btn btn-default" type="button" ><span class="glyphicon glyphicon-pencil"></span> Ajouter une description</button>
+  <button class="btn btn-default" type="button" ng-click="ctxMenulCtrl.deleteFileDialog(detailsPaneCtrl.details)"><span class="glyphicon glyphicon-remove-sign" ></span> Supprimer</button>
 </div>
 
 <div ng-if="detailsPaneCtrl.details.name && !detailsPaneCtrl.details.size">
