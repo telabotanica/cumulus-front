@@ -42,6 +42,10 @@ ol.breadcrumb {
     margin-bottom: 0;
 }
 
+ol.breadcrumb li {
+    color: #98AACB;
+}
+
 add-file-button {
     display: inline-block;
 }
@@ -277,6 +281,12 @@ add-file-button {
     cursor: pointer;
 }
 
+.breadcrumb a {
+   color: #918a6f;
+}
+
+/* Detail Panel */
+
 .separator-container {
     width: 100%;
     margin-bottom: 20px;
@@ -291,6 +301,38 @@ add-file-button {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+#details-pane-container a {
+    color: #918a6f;
+}
+
+#details-pane-container .btn-primary {
+   background-color: #cccccc !important;
+   border-color: #ffffff;
+}
+
+#details-pane-container .btn-primary:hover{
+   background-color: #dddddd !important;
+   border-color: #ffffff;
+}
+
+.editable-controls input {
+   border-color: #dddddd;
+}
+
+.editable-controls input:focus {
+  border-color: #aaa388;
+  -webkit-box-shadow: none;
+  outline: -webkit-focus-ring-color auto 0px;
+}
+
+.editable-controls select {
+   border-color: #dddddd;
+}
+
+.editable-controls select:focus {
+   border-color: #aaa388;
 }
 
 /* Notifications */
@@ -355,10 +397,9 @@ body.modal-open {
 
 #file-search-input:focus {
   border-color: #aaa388;
-    	-webkit-box-shadow: none;
-    	outline: -webkit-focus-ring-color auto 0px;
+  -webkit-box-shadow: none;
+  outline: -webkit-focus-ring-color auto 0px;
 }
-
 
 .float-none {
   float: none;
