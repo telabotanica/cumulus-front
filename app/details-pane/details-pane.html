@@ -1,22 +1,54 @@
-<div ng-if="detailsPaneCtrl.details.name && detailsPaneCtrl.details.size">
+<div id="details-pane-container" ng-if="detailsPaneCtrl.details.name && detailsPaneCtrl.details.size"
+ ng-controller="ContextMenuController as ctxMenulCtrl">
   <h3 class="flex">
-    <span class="{{ detailsPaneCtrl.details.mimetype | mimetypeIcon }}"></span> <span class="file-name ellipsis-content">{{ detailsPaneCtrl.details.name }}</span>
+    <span class="{{ detailsPaneCtrl.details.mimetype | mimetypeIcon }}"></span>
+    <span class="file-name ellipsis-content">
+      <a href="#" editable-text="detailsPaneCtrl.details.name" onbeforesave="detailsPaneCtrl.handlePartialUpdateEvent(detailsPaneCtrl.details.fkey, 'name', $data)">
+        {{ detailsPaneCtrl.details.name }}
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+    </span>
   </h3>
-
+<!--  data-url="/{{filesServiceUrl + detailsPaneCtrl.details.path + '/' + detailsPaneCtrl.details.fkey}}" -->
   <separator></separator>
 
   <details-pane-data datasource="detailsPaneCtrl.details.size | formatByte" dataname="'Taille'"></details-pane-data>
   <!-- <details-pane-data datasource="detailsPaneCtrl.details.path" dataname="'Emplacement'"></details-pane-data> -->
   <details-pane-data datasource="detailsPaneCtrl.details.creation_date" dataname="'Créé le'"></details-pane-data>
-  <details-pane-data datasource="detailsPaneCtrl.details.last_modification_date" dataname="'Dernière modification'"></details-pane-data>
+  <details-pane-data datasource="detailsPaneCtrl.details.last_modification_date" dataname="'Modifié le'"></details-pane-data>
   <br>
   <details-pane-data datasource="detailsPaneCtrl.details.owner" dataname="'Propriétaire'"></details-pane-data>
-  <details-pane-data datasource="detailsPaneCtrl.details.license" dataname="'Licence'"></details-pane-data>
-  <details-pane-data datasource="detailsPaneCtrl.details.permissions" dataname="'Permissions'"></details-pane-data>
-
+  <div class="details-pane-data-cell">
+    <div class="details-pane-data-name">Licence</div>
+    <div class="details-pane-data-value">
+      <a href="#" editable-select="detailsPaneCtrl.details.license" e-ng-options="s.text as s.text for s in detailsPaneCtrl.licences" onbeforesave="detailsPaneCtrl.handlePartialUpdateEvent(detailsPaneCtrl.details.fkey, 'licence', $data)">
+        {{ detailsPaneCtrl.details.license }}
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+    </div>
+  </div>
+  <div class="details-pane-data-cell">
+    <div class="details-pane-data-name">Permissions</div>
+    <div class="details-pane-data-value">
+      <a href="#" editable-select="detailsPaneCtrl.details.permissions" e-ng-options="s.text as s.text for s in detailsPaneCtrl.permissionList" onbeforesave="detailsPaneCtrl.handlePartialUpdateEvent(detailsPaneCtrl.details.fkey, 'permissions', $data)">
+        {{ detailsPaneCtrl.details.permissions }}
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+    </div>
+  </div>
+  <div class="details-pane-data-cell">
+    <div class="details-pane-data-name">Description</div>
+    <div class="details-pane-data-value">
+      <a href="#" editable-text="detailsPaneCtrl.details.description">
+        {{ detailsPaneCtrl.details.description || "pas de description..." }}
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+    </div>
+  </div>
   <separator></separator>
 
-  <button class="btn btn-default" type="button" disabled><span class="glyphicon glyphicon-pencil"></span> Ajouter une description</button>
+
+  <button class="btn btn-default" type="button" ng-click="ctxMenulCtrl.deleteFileDialog(detailsPaneCtrl.details)"><span class="glyphicon glyphicon-remove-sign" ></span> Supprimer</button>
 </div>
 
 <div ng-if="detailsPaneCtrl.details.name && !detailsPaneCtrl.details.size">
@@ -32,3 +64,4 @@
 
   <separator></separator>
 </div>
+

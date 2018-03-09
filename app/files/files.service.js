@@ -21,6 +21,7 @@
       sortFiles: sortFiles,
       deleteFile: deleteFile,
       renameFile: renameFile,
+      partialUpdate: partialUpdate,
       getPathInfo: getPathInfo,
       uploadFiles: uploadFiles,
       uploadFilesInFolder: uploadFilesInFolder
@@ -34,6 +35,22 @@
      */
     function getList() {
       return vm.filesList;
+    }
+
+    function partialUpdate(fkey, propertyName, propertyValue) {
+      var jsonPayload = {}
+      jsonPayload[propertyName] = propertyValue;
+
+      $http.patch(config.filesServiceUrl + '/' + fkey, jsonPayload)
+        .success(function(data) {
+
+        })
+        .error(function() {
+          console.log('erruer tavu lol');
+          vm.filesList.files = [];
+          vm.filesList.folders = [];
+        })
+      ;
     }
 
     /**
@@ -492,3 +509,4 @@
     }
   });
 })();
+
