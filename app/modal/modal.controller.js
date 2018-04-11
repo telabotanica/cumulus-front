@@ -75,9 +75,13 @@
         openModal('delete-file', file, function(deletionConfirmed) {
           if (deletionConfirmed) {
             FilesListService.deleteFile(file).then(function(response) {
-              ngToast.create('File deleted');
               console.log(response.data.path);
               $rootScope.$broadcast('openAbsoluteFolder', response.data.path);
+              ngToast.create('Fichier supprimés');
+              var modalBackdrops = document.getElementsByClassName('modal-backdrop');
+              Array.prototype.forEach.call(modalBackdrops, function(modalBackdrop) {
+                  modalBackdrop.parentNode.removeChild(modalBackdrop);
+              });
             }, function(response) {
               if (response.status >= 500) {
                 ngToast.danger('Uhoh, something went wrong...' + (response.data.error ? ' "' + response.data.error + '"' : ''));
