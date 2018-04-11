@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="bower_components/ngtoast/dist/ngToast.min.css">
+  <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.min.css">
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
 </head>
 <body>
   <!--[if lt IE 7]>
@@ -36,6 +38,12 @@
           Résultats: {{ nbSearchResults }}
         </div>
         <filesearch></filesearch>
+        <button class="btn btn-default" type="button" >
+          <span class="padding8 glyphicon glyphicon-file-plus" aria-hidden="true"></span>
+        </button>
+        <button class="btn btn-default" type="button" >
+          <span class="padding8 glyphicon glyphicon-folder-plus" aria-hidden="true"></span>
+        </button>
         <button class="btn btn-default" type="button"
           ng-click="isDetailsPaneOpened = !isDetailsPaneOpened"
           ng-class="{ active: isDetailsPaneOpened }">
@@ -223,3 +231,4 @@
   <script src="bower_components/ngtoast/dist/ngToast.js"></script>
 </body>
 </html>
+

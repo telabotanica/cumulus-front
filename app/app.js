@@ -15,7 +15,8 @@
     'ngContextMenu',
     'angularMoment',
     'angularModalService',
-    'ngToast'
+    'ngToast',
+    'xeditable'
   ])
 
   // .directive('ngRightClick', function($parse) {
@@ -135,6 +136,10 @@
 
   .config(['$httpProvider', function($httpProvider) {
     $httpProvider.interceptors.push('authInjector', 'sessionRecoverer');
+  }])
+
+  .run(['editableOptions', function(editableOptions) {
+    editableOptions.theme = 'bs3'; // bootstrap3 theme.
   }])
 
   .factory('authService', ['$rootScope', '$http', 'config', function($rootScope, $http, config) {
@@ -400,3 +405,4 @@
     };
   });
 })();
+
