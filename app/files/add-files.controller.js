@@ -58,7 +58,11 @@
 
             currentPath = crumbsArray.slice(1, crumbsArray.length).join('/');
             $rootScope.$broadcast('openAbsoluteFolder', '/' + currentPath);
-            ngToast.create('Fichiers uploadés');
+             ngToast.create({
+               className: 'info',
+               content: '<a href="#" class="">Fichiers uploadés</a>',
+               verticalPosition: 'bottom'
+            });
             var modalBackdrops = document.getElementsByClassName('modal-backdrop');
             Array.prototype.forEach.call(modalBackdrops, function(modalBackdrop) {
                 modalBackdrop.parentNode.removeChild(modalBackdrop);

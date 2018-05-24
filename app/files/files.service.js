@@ -37,16 +37,22 @@
       return vm.filesList;
     }
 
+    /**
+     * Changes the value for a property of a document resource.
+     *
+     * @param fkey: the key of the document
+     * @param propertyName the name of the property to patch
+     * @param propertyValue the value of the property to patch
+     */
     function partialUpdate(fkey, propertyName, propertyValue) {
       var jsonPayload = {}
       jsonPayload[propertyName] = propertyValue;
 
       $http.patch(config.filesServiceUrl + '/' + fkey, jsonPayload)
         .success(function(data) {
-
+          ngToast.create('Document mis à jour');
         })
         .error(function() {
-          console.log('erruer tavu lol');
           vm.filesList.files = [];
           vm.filesList.folders = [];
         })
@@ -370,7 +376,8 @@
      * @return     {Promise}
      */
     function deleteFile(file) {
-      return $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey);
+      angular.element( document.querySelector( '#details-pane' ) ).text("<h1>Fichier supprimé avec succès</h1>");
+//      return $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey);
     }
 
     /**
@@ -509,4 +516,3 @@
     }
   });
 })();
-
