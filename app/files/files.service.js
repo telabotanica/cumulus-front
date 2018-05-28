@@ -45,7 +45,7 @@
      * @param propertyValue the value of the property to patch
      */
     function partialUpdate(fkey, propertyName, propertyValue) {
-      var jsonPayload = {}
+      var jsonPayload = {};
       jsonPayload[propertyName] = propertyValue;
 
       $http.patch(config.filesServiceUrl + '/' + fkey, jsonPayload)
@@ -376,8 +376,8 @@
      * @return     {Promise}
      */
     function deleteFile(file) {
-      angular.element( document.querySelector( '#details-pane' ) ).text("<h1>Fichier supprimé avec succès</h1>");
-//      return $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey);
+      angular.element( document.querySelector( '#details-pane' ) ).html("<h1>Fichier supprimé avec succès</h1>");
+      return $http.delete(config.filesServiceUrl + file.path + '/' + file.fkey);
     }
 
     /**
