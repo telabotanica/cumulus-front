@@ -2,15 +2,15 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" ng-click="newFolderModalCtrl.close()" aria-hidden="true">&times;</button>
+        <button type="button" class="close" ng-click="newFolderModalCtrl.closeModal()" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Nom du nouveau dossier ?</h4>
       </div>
       <div class="modal-body">
         <input ng-model="newFolderModalCtrl.folderName" type="text" value="{{ newFolderModalCtrl.folderName }}" class="width100" select-on-click />
       </div>
       <div class="modal-footer">
-        <button type="button" ng-click="newFolderModalCtrl.close()" class="btn btn-default">Annuler</button>
-        <button type="button" ng-click="newFolderModalCtrl.close(newFolderModalCtrl.folderName)" class="btn btn-primary">Créer</button>
+        <button type="button" ng-click="newFolderModalCtrl.closeModal()" class="btn btn-default">Annuler</button>
+          <button type="button" ng-click="newFolderModalCtrl.close(newFolderModalCtrl.folderName)" class="btn btn-primary">Créer</button>
       </div>
     </div>
   </div>

@@ -73,18 +73,24 @@
 
       function deleteFileDialog(file) {
         openModal('delete-file', file, function(deletionConfirmed) {
+
+          vm.closeModal = function() {
+              jQuery(".modal-backdrop").remove();
+              jQuery(".modal").remove();
+          };
+
+
           if (deletionConfirmed) {
             FilesListService.deleteFile(file).then(function(response) {
-              console.log(response.data.path);
-              $rootScope.$broadcast('openAbsoluteFolder', response.data.path);
-              ngToast.create('Fichier supprimés');
+              ngToast.create('Fichier supprimé');
               var modalBackdrops = document.getElementsByClassName('modal-backdrop');
               Array.prototype.forEach.call(modalBackdrops, function(modalBackdrop) {
                   modalBackdrop.parentNode.removeChild(modalBackdrop);
               });
+              $rootScope.$broadcast('openAbsoluteFolder', response.data.path);
             }, function(response) {
               if (response.status >= 500) {
-                ngToast.danger('Uhoh, something went wrong...' + (response.data.error ? ' "' + response.data.error + '"' : ''));
+                ngToast.danger('Une erreur est survenue...' + (response.data.error ? ' "' + response.data.error + '"' : ''));
               } else {
                 ngToast.danger(response.statusText);
               }
