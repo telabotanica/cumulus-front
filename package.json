@@ -13,6 +13,6 @@
     "build": "lessc app/prefix.less app/bootstrap-iso.css && sed -i \"s/.bootstrap-iso body/.bootstrap-iso/\" app/bootstrap-iso.css && sed -i \"s/.bootstrap-iso html/.bootstrap-iso/\" app/bootstrap-iso.css && sed -i \"s|../fonts/glyphicons|bower_components/bootstrap/dist/fonts/glyphicons|g\" app/bootstrap-iso.css"
   },
   "dependencies": {
-    "less": "^2.7.3"
+    "less": "^3.0.4"
   }
 }
