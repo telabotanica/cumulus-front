@@ -45,7 +45,7 @@
      * @param propertyValue the value of the property to patch
      */
     function partialUpdate(fkey, propertyName, propertyValue) {
-      var jsonPayload = {}
+      var jsonPayload = {};
       jsonPayload[propertyName] = propertyValue;
 
       $http.patch(config.filesServiceUrl + '/' + fkey, jsonPayload)
