@@ -1,0 +1,32 @@
+<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="Ajouter un fichier">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="newFolderModalCtrl.closeModal()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Ajouter un fichier</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <div>
+            <label for="file" class="col-sm-2 control-label">Fichier</label>
+            <input type="file" files-input ng-model="newFolderModalCtrl.file" multiple>
+          </div>
+          <!--
+          <div>
+            <div class="fileupload-field-label">Licence</div>
+              <select ng-model="newFolderModalCtrl.licence" ng-options="s.text as s.text for s in newFolderModalCtrl.licences" ></select>
+          </div>
+          <div class="details-pane-data-name">Permissions</div>
+          <div class="details-pane-data-value">
+            <select ng-model="newFolderModalCtrl.permissions" ng-options="s.text as s.text for s in newFolderModalCtrl.permissionList" ></select>
+          </div>
+-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" ng-click="newFolderModalCtrl.closeModal()" class="btn btn-default">Annuler</button>
+            <button type="button" ng-click="newFolderModalCtrl.closeUploadFileModal(newFolderModalCtrl.file, newFolderModalCtrl.permissions, newFolderModalCtrl.licence)" class="btn btn-primary">Créer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
