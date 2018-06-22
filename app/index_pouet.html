@@ -5,21 +5,22 @@
       <breadcrumbs></breadcrumbs>
     </div>
 
-    <div id="right-tools" ng-class="{ width100: nbSearchResults }">
+    <div id="right-tools" ng-class="{ width100: nbSearchResults }" >
       <div id="nb-search-results" class="flex1 padding8" class="padding8"
         ng-if="nbSearchResults">
         Résultats: {{ nbSearchResults }}
       </div>
       <filesearch></filesearch>
-      <button class="btn btn-default" type="button" >
-        <span class="padding8 glyphicon glyphicon-cloud-upload" aria-hidden="true"></span>
+      <button class="btn btn-default" ng-controller="FilesListController as fileCtrl" ng-click="fileCtrl.showUploadFileModal()" type="button" >
+        <span class="padding8 glyphicon glyphicon-cloud-upload" aria-hidden="true">
+        </span>
       </button>
-      <button class="btn btn-default" type="button" >
+      <button class="btn btn-default" ng-controller="FilesListController as fileCtrl" ng-click="fileCtrl.createNewFolder()" type="button" >
         <span class="padding8 glyphicon glyphicon-folder-close" aria-hidden="true"></span>
       </button>
       <button class="btn btn-default" type="button"
-        ng-click="isDetailsPaneOpened = !isDetailsPaneOpened"
-        ng-class="{ active: isDetailsPaneOpened }">
+         ng-click="isDetailsPaneOpened = !isDetailsPaneOpened"
+         ng-class="{ active: isDetailsPaneOpened }">
         <span class="padding8 glyphicon glyphicon-eye-open" aria-hidden="true"></span>
       </button>
       <button class="btn btn-default" type="button" disabled>
@@ -104,7 +105,7 @@
               ng-model="file"
               ng-click="filesListCtrl.showDetails(file)">
               <td>
-                <span ng-class="filesListCtrl.fileIcon(file.mimetype)"></span> {{ file.name }}
+                <span ng-class="filesListCtrl.fileIcon(file.mimetype)" ></span> {{ file.name }}
               </td>
               <td>{{ file.owner }}</td>
               <!-- <td>{{ file.last_modification_date | date : 'd MMM yyyy' }}</td> -->
@@ -160,4 +161,3 @@
 </div> -->
 
 <toast></toast>
-
