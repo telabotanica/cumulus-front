@@ -62,7 +62,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr id="dropzone-new-folder" class="new-folder-element" ng-class="{ dragover: addFilesCtrl.dropTarget == 'newFolder' }"
+            <!-- <tr id="dropzone-new-folder" class="new-folder-element" ng-class="{ dragover: addFilesCtrl.dropTarget == 'newFolder' }"
               ng-show="addFilesCtrl.dropTarget"
               ng-model="filesNewFolder"
               name="fileUploadInNewFolder"
@@ -81,7 +81,7 @@
               <td></td>
               <td></td>
               <td></td>
-            </tr>
+            </tr> -->
 
             <!-- Folders list -->
             <tr class="folder-element" ng-if="filesListCtrl.searchResultsFilesList.length == 0" ng-repeat="folder in filesListCtrl.filesList.folders" ng-dblclick="filesListCtrl.openFolder(folder.name)" ng-click="filesListCtrl.showDetails(folder)" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
